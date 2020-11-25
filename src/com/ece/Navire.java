@@ -60,10 +60,18 @@ public abstract class Navire {
          return true;
      }
 
-    protected abstract boolean canGoRight();
-    protected abstract boolean canGoLeft();
-    protected abstract boolean canGoUp();
-    protected abstract boolean canGoDown();
+    protected boolean canGoRight(){
+         return true;
+    }
+    protected boolean canGoLeft(){
+        return true;
+    }
+    protected boolean canGoUp(){
+        return true;
+    }
+    protected boolean canGoDown(){
+        return true;
+    }
 
     protected abstract void goDown();
     protected abstract void goUp();
@@ -76,6 +84,7 @@ public abstract class Navire {
         String directionEntre;
         do{
             System.out.println("Saisissez une direction pour le navire : "+ narive);
+            System.out.println("Ou entrer \"X\" pour sortir du mode de déplacement");
             directionEntre = sc.nextLine();
             try {
                 controle(directionEntre);
