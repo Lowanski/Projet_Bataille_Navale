@@ -10,5 +10,6 @@ public class Main {
         //testpaul
         // test lowan
         System.out.println("c'est un test");
+        System.out.println("ntm paul");
     }
 }
