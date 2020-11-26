@@ -6,6 +6,7 @@ public abstract class Navire {
     Point coord = null;
     String orientation;
 
+
     public static class SaisieErroneeException extends Exception {
         public SaisieErroneeException(String s) {
             super(s);

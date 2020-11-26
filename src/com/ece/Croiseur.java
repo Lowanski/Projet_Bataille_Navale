@@ -1,6 +1,11 @@
 package com.ece;
 
 public class Croiseur extends Navire{
+
+    int taille = 5;
+    int puissanceTire = 4;
+
+
     @Override
     public void tire() {
 
