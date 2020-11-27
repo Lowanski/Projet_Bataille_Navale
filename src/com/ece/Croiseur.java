@@ -3,8 +3,8 @@ package com.ece;
 public class Croiseur extends Navire{
 
     Croiseur(){
-        taille = 5;
-        puissanceTire = 4;
+        this.setTaille(5);
+        this.setPuissanceTire(4);
     }
     
 

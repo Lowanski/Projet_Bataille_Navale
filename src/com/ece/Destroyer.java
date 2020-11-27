@@ -3,8 +3,8 @@ package com.ece;
 public class Destroyer extends Navire{
 
     Destroyer(){
-        taille = 3;
-        puissanceTire = 1;
+        this.setTaille(3);
+        this.setPuissanceTire(1);
     }
     
 

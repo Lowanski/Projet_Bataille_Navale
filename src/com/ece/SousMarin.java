@@ -3,8 +3,8 @@ package com.ece;
 public class SousMarin extends Navire{
 
     SousMarin(){
-        taille = 1;
-        puissanceTire = 1;
+        this.setTaille(1);
+        this.setPuissanceTire(1);
     }
     
 

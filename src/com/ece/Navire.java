@@ -3,19 +3,52 @@ import java.awt.*;
 import java.util.Scanner;
 
 public abstract class Navire {
-    Point coord;
-    String orientation; // verticale ; horizontale
-    int taille;
-    int puissanceTire;
+
+    private Point coord;
+    private String orientation; // verticale ; horizontale
+    private int taille;
+    private int puissanceTire;
+    private int id;
 
     Navire() {
         coord = null;
         orientation = null;
         taille = 0;
         puissanceTire = 0;
+        id =0;
     }
 
+    public void setPuissanceTire(int puissanceTire) {
+        this.puissanceTire = puissanceTire;
+    }
 
+    public int getPuissanceTire() {
+        return puissanceTire;
+    }
+
+    public void setCoord(Point coord) {
+        this.coord = coord;
+    }
+
+    public Point getCoord() {
+        return coord;
+    }
+
+    public int getTaille() {
+        return taille;
+    }
+
+    public void setTaille(int taille) {
+        this.taille = taille;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getOrientation() {
         return orientation;

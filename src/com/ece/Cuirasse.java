@@ -3,8 +3,8 @@ package com.ece;
 public class Cuirasse extends Navire{
 
     Cuirasse(){
-        taille = 7;
-        puissanceTire = 9;
+        this.setTaille(7);
+        this.setPuissanceTire(9);
     }
     
 

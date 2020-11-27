@@ -44,8 +44,10 @@ public class Menu {
     }
 
     public static void jouerPartie() {
-        Grille grille = new Grille();
-        grille.dessiner();
+        Grille jGrille = new Grille();
+        Grille oGrille = new Grille();
+        jGrille.dessiner();
+        oGrille.dessiner();
 
     }
 
