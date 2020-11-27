@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public abstract class Navire {
     Point coord;
-    String orientation;
+    String orientation; // verticale ; horizontale
     int taille;
     int puissanceTire;
 
@@ -13,6 +13,16 @@ public abstract class Navire {
         orientation = null;
         taille = 0;
         puissanceTire = 0;
+    }
+
+
+
+    public String getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(String orientation) {
+        this.orientation = orientation;
     }
 
     public static class SaisieErroneeException extends Exception {

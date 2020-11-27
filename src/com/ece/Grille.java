@@ -1,5 +1,6 @@
 package com.ece;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Grille {
 
@@ -14,6 +15,7 @@ public class Grille {
     ArrayList<Croiseur> listCroiseur = new ArrayList();
     ArrayList<Destroyer> listDestroyer = new ArrayList();
     ArrayList<SousMarin> listSousmarin = new ArrayList();
+
 
 
     public void dessiner() {
@@ -59,6 +61,65 @@ public class Grille {
             System.out.println("Numero : "+i);
             SousMarin sousMarin = new SousMarin();
             listSousmarin.add(sousMarin);
+        }
+
+        Random rand = new Random();
+        int val;
+        val = rand.nextInt(2);
+        if(val ==0)
+        {
+            System.out.println(val);
+            cuirasse.setOrientation("verticale");
+        }
+        else{
+            System.out.println(val);
+            cuirasse.setOrientation("horizontale");
+        }
+
+        for (Croiseur s : listCroiseur)
+        {
+            Random rando = new Random();
+            int valeur;
+            valeur = rand.nextInt(2);
+            if(valeur ==0)
+            {
+                System.out.println(valeur);
+                s.setOrientation("verticale");
+            }
+            else{
+                System.out.println(valeur);
+                s.setOrientation("horizontale");
+            }
+        }
+        for (Destroyer s : listDestroyer)
+        {
+            Random rando = new Random();
+            int valeur;
+            valeur = rand.nextInt(2);
+            if(valeur ==0)
+            {
+                System.out.println(valeur);
+                s.setOrientation("verticale");
+            }
+            else{
+                System.out.println(valeur);
+                s.setOrientation("horizontale");
+            }
+        }
+        for (SousMarin s : listSousmarin)
+        {
+            Random rando = new Random();
+            int valeur;
+            valeur = rand.nextInt(2);
+            if(valeur ==0)
+            {
+                System.out.println(valeur);
+                s.setOrientation("verticale");
+            }
+            else{
+                System.out.println(valeur);
+                s.setOrientation("horizontale");
+            }
         }
 
 
