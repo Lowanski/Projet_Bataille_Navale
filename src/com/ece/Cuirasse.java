@@ -2,8 +2,11 @@ package com.ece;
 
 public class Cuirasse extends Navire{
 
-    int taille = 7;
-    int puissanceTire = 9;
+    Cuirasse(){
+        taille = 7;
+        puissanceTire = 9;
+    }
+    
 
     @Override
     public void tire() {

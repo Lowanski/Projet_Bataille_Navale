@@ -2,8 +2,11 @@ package com.ece;
 
 public class SousMarin extends Navire{
 
-    int taille = 1;
-    int puissanceTire = 1;
+    SousMarin(){
+        taille = 1;
+        puissanceTire = 1;
+    }
+    
 
     @Override
     public void tire() {

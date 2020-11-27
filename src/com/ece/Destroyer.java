@@ -2,8 +2,11 @@ package com.ece;
 
 public class Destroyer extends Navire{
 
-    int taille = 3;
-    int puissanceTire = 1;
+    Destroyer(){
+        taille = 3;
+        puissanceTire = 1;
+    }
+    
 
     @Override
     public void tire() {
@@ -29,4 +32,5 @@ public class Destroyer extends Navire{
     protected void goRight() {
 
     }
+
 }

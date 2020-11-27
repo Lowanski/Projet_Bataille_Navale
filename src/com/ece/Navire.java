@@ -32,40 +32,40 @@ public abstract class Navire {
 
     abstract public void tire();
 
-    public boolean bouger() {
+    public boolean bouger(){
         String direction;
         direction = saisirDirection(this);
         direction.toUpperCase();
-        switch (direction) {
-            case "D": {
+        switch (direction){
+            case "D":{
                 boolean yes = this.canGoRight();
-                if (yes) {
+                if (yes){
                     this.goRight();
                 }
             }
 
-            case "G": {
+            case "G":{
                 boolean yes = this.canGoLeft();
-                if (yes) {
+                if (yes){
                     this.goLeft();
                 }
             }
 
-            case "H": {
+            case "H":{
                 boolean yes = this.canGoUp();
-                if (yes) {
+                if (yes){
                     this.goUp();
                 }
             }
 
-            case "B": {
+            case "B":{
                 boolean yes = this.canGoDown();
-                if (yes) {
+                if (yes){
                     this.goDown();
                 }
             }
 
-            case "X": {
+            case "X":{
                 return false;
             }
         }
