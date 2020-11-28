@@ -1,11 +1,10 @@
 package com.ece;
 import java.awt.*;
-<<<<<<< HEAD
-=======
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import javafx.util.*;
->>>>>>> 912270c038c2555a446247eba561a95c7c46f275
+
 
 public abstract class Navire {
 
