@@ -15,8 +15,6 @@ public class SousMarin extends Navire{
     public void tire() {
 
     }
-<<<<<<< HEAD
-=======
 
     @Override
     protected void goDown() {
@@ -37,7 +35,4 @@ public class SousMarin extends Navire{
     protected void goRight() {
 
     }
-
-
->>>>>>> 912270c038c2555a446247eba561a95c7c46f275
 }
