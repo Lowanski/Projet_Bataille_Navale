@@ -1,29 +1,27 @@
 package com.ece;
+
 import java.awt.*;
-<<<<<<< HEAD
-=======
-import java.util.ArrayList;
-import java.util.Scanner;
-import javafx.util.*;
->>>>>>> 912270c038c2555a446247eba561a95c7c46f275
+import java.util.Random;
 
 public abstract class Navire {
 
     private Point coord;
     private String orientation; // verticale ; horizontale
-    private int taille;
-    private int puissanceTire;
-    private int id;
+    protected int taille;
+    protected int puissanceTire;
+    protected int id;
     protected int[] toucherTab;
 
     Navire() {
-        coord = null;
-        orientation = null;
-        taille = 0;
-        puissanceTire = 0;
-        id =0;
+        Random rand = new Random();
+        int val;
+        val = rand.nextInt(2);
+        if(val ==0)
+        orientation = "verticale";
+        
+        else
+        orientation= "horizontale";
     }
-
 
     public void setToucherTab(int[] toucherTab) {
         this.toucherTab = toucherTab;
