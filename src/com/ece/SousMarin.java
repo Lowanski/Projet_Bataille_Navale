@@ -32,4 +32,6 @@ public class SousMarin extends Navire{
     protected void goRight() {
 
     }
+
+
 }
