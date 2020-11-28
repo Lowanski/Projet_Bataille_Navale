@@ -1,6 +1,8 @@
 package com.ece;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Scanner;
+import javafx.util.*;
 
 public abstract class Navire {
 
@@ -9,6 +11,7 @@ public abstract class Navire {
     private int taille;
     private int puissanceTire;
     private int id;
+    protected int[] toucherTab;
 
     Navire() {
         coord = null;
@@ -16,6 +19,15 @@ public abstract class Navire {
         taille = 0;
         puissanceTire = 0;
         id =0;
+    }
+
+
+    public void setToucherTab(int[] toucherTab) {
+        this.toucherTab = toucherTab;
+    }
+
+    public int[] getToucherTab() {
+        return toucherTab;
     }
 
     public void setPuissanceTire(int puissanceTire) {
