@@ -49,6 +49,7 @@ public class Menu {
     }
 
     public static void jouerPartie() {
+
         Grille Grille1= new Grille();
         Grille Grille2= new Grille();
         Joueur joueur1 = new Joueur(Grille1,Grille2);
@@ -58,6 +59,7 @@ public class Menu {
         joueur1.getOGrille().dessiner();
         joueur2.getJGrille().dessiner();
         joueur2.getOGrille().dessiner();
+
     }
 
     public static void chargerPartie() {

@@ -8,6 +8,7 @@ import java.util.Random;
 public class Grille {
 
     Navire[][] tableau = new Navire[15][15];
+    Cuirasse cuirasse = new Cuirasse();
     ArrayList<Croiseur> listCroiseur = new ArrayList();
     ArrayList<Destroyer> listDestroyer = new ArrayList();
     ArrayList<SousMarin> listSousmarin = new ArrayList();
@@ -22,6 +23,7 @@ public class Grille {
     }
 
     public void dessiner() {
+
         System.out.println("   | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |");
         System.out.println("=================================================================");
 
@@ -37,9 +39,19 @@ public class Grille {
             System.out.println("|");
         }
         System.out.println("=================================================================");
+
     }
 
-    public void setOrientationRandom(Navire n) {
+    public void dessinerHide()
+    {
+        System.out.println("   | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |");
+        System.out.println("=================================================================");
+
+    }
+
+
+    public void setOrientationRandom(Navire n)
+    {
         Random rand = new Random();
         int val;
         val = rand.nextInt(2);
@@ -134,7 +146,6 @@ public class Grille {
 
     public void spawn() {
 
-        Cuirasse cuirasse = new Cuirasse();
         cuirasse.setId(1);
         setOrientationRandom(cuirasse);
         setPositionRandom(cuirasse);
