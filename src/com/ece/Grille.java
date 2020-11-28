@@ -39,6 +39,35 @@ public class Grille {
         }
     }
 
+    Grille(ArrayList<Cuirasse> listCui,ArrayList<Croiseur> listCroi, ArrayList<Destroyer> listDestr, ArrayList<SousMarin> listSous){
+        for (Cuirasse cui:listCui) {
+            Point coord = cui.getCoord();
+            setPosition(cui,coord.x,coord.y);
+        }
+        for (Croiseur croi:listCroi) {
+            Point coord = croi.getCoord();
+            setPosition(croi,coord.x,coord.y);
+        }
+        for (Destroyer destr:listDestr) {
+            Point coord = destr.getCoord();
+            setPosition(destr,coord.x,coord.y);
+        }
+        for (SousMarin sous:listSous) {
+            Point coord = sous.getCoord();
+            setPosition(sous,coord.x,coord.y);
+        }
+    }
+
+    public void setListCroiseur(ArrayList<Croiseur> c){
+        listCroiseur = c;
+    }
+    public void setListDestroyer(ArrayList<Destroyer> d){
+        listDestroyer = d;
+    }
+    public void setListSousmarin(ArrayList<SousMarin> sm){
+        listSousmarin = sm;
+    }
+
     public Navire[][] getTableau() {
         return tableau;
     }
@@ -62,8 +91,6 @@ public class Grille {
             System.out.println("|");
         }
         System.out.println("=================================================================");
-
-        cuirasse.canGoRight(this);
     }
 
     public void setPositionRandom(Navire n) {
@@ -107,6 +134,45 @@ public class Grille {
             }
         }
     }
+
+    public boolean setPosition(Navire n, int x, int y) {
+        if (n.getOrientation() == "verticale") {
+            Point point = new Point();
+            point.x = x;
+            point.y = y;
+            int nbCheck = 0;
+            for (int i = point.y; i < point.y + (n.getTaille()); i++) {
+                if (tableau[point.x][i] == null) {
+                    nbCheck++;
+                }
+            }
+            if (nbCheck == n.getTaille()) {
+                n.setCoord(point);
+                for (int i = point.y; i < point.y + (n.getTaille()); i++) {
+                    tableau[point.x][i] = n;
+                }return true;
+            }
+            return false;
+        } else {
+            Point point = new Point();
+            point.x = x;
+            point.y = y;
+            int nbCheck = 0;
+            for (int i = point.x; i < point.x + (n.getTaille()); i++) {
+                if (tableau[i][point.y] == null) {
+                    nbCheck++;
+                }
+            }
+            if (nbCheck == n.getTaille()) {
+                n.setCoord(point);
+                for (int i = point.x; i < point.x + (n.getTaille()); i++) {
+                    tableau[i][point.y] = n;
+                }return true;
+            }
+            return false;
+        }
+    }
+
 
     public static class SaisieErroneeException extends Exception {
         public SaisieErroneeException(String s) {
