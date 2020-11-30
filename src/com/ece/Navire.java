@@ -72,39 +72,43 @@ public abstract class Navire {
     }
 
     protected boolean canGoRight(Grille g) {
-        System.out.println("on y est");
-        if ((orientation == "h")&& (getCoord().getX() + taille < 15 )&&(g.getTableau()[(int) getCoord()
-                .getX()+1][(int) getCoord().getY()] == null))
-                {
-                    System.out.println("tu peux aller a droite");
-                     return true;
-                }
-       
-        else{ System.out.println("tu peux pas aller a droite");
+        if ((orientation == "horizontale")&& (getCoord().getX() + taille < 15 )&&(g.getTableau()[(int) getCoord().getX()+taille][(int) getCoord().getY()] == null)){
+            return true;
+        }
+        else{
             return false;
         }
         
     }
 
     protected boolean canGoLeft(Grille g) {
-        if ((orientation == "h")&& (getCoord().getX() > 0 )&&(g.getTableau()[(int) getCoord().getX()-1][(int) getCoord().getY()]==null))
-        return true;
-        else
-        return false;
+        if ((orientation == "horizontale")&& (getCoord().getX() > 0 )&&(g.getTableau()[(int) getCoord().getX()-1][(int) getCoord().getY()]==null)){
+            return true;
+        }
+        else{
+           return false; 
+        }
+        
     }
 
     protected boolean canGoUp(Grille g) {
-        if ((orientation == "vertical")&& (getCoord().getY() > 0 )&&(g.getTableau()[(int) getCoord().getX()][(int)getCoord().getY()-1]==null))
-        return true;
-        else
-        return false;
+        if ((orientation == "verticale")&& (getCoord().getY() > 0 )&&(g.getTableau()[(int) getCoord().getX()][(int)getCoord().getY()-1]==null)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     protected boolean canGoDown(Grille g) {
-        if ((orientation == "vertical")&& (getCoord().getY() + taille < 15 )&&(g.getTableau()[(int)getCoord().getX()][(int)getCoord().getY()+1]==null))
-        return true;
-        else
-        return false;
+        if ((orientation == "verticale")&& (getCoord().getY() + taille < 15 )&&(g.getTableau()[(int)getCoord().getX()][(int)getCoord().getY()+taille]==null)){
+            return true; 
+        }
+        else{
+            return false;
+        }
+            
+        
     }
 
     protected void goDown(){

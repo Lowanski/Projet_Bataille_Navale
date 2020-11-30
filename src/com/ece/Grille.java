@@ -81,8 +81,8 @@ public class Grille {
             System.out.print(cons[i]+ "|");
             for(int j=0; j<15; j++)
             {
-                if(tableau[i][j] != null) {
-                    System.out.print(" " + tableau[i][j].getId() + "  ");
+                if(tableau[j][i] != null) {
+                    System.out.print(" " + tableau[j][i].getId() + "  ");
                 }
                 else{
                     System.out.print("--- ");
@@ -91,6 +91,13 @@ public class Grille {
             System.out.println("|");
         }
         System.out.println("=================================================================");
+        System.out.println(cuirasse.getOrientation());
+        System.out.println(cuirasse.getCoord());
+        System.out.println(cuirasse.getTaille());
+        cuirasse.canGoDown(this);
+        cuirasse.canGoLeft(this);
+        cuirasse.canGoRight(this);
+        cuirasse.canGoUp(this);
     }
 
     public void setPositionRandom(Navire n) {
