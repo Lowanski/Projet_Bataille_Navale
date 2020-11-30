@@ -9,14 +9,14 @@ import java.util.Scanner;
 
 public class Menu {
 
-    private static ArrayList<Cuirasse> listCuirasseJ = new ArrayList();
-    private static ArrayList<Croiseur> listCroiseurJ = new ArrayList();
-    private static ArrayList<Destroyer> listDestroyerJ = new ArrayList();
-    private static ArrayList<SousMarin> listSousmarinJ = new ArrayList();
-    private static ArrayList<Cuirasse> listCuirasseO = new ArrayList();
-    private static ArrayList<Croiseur> listCroiseurO = new ArrayList();
-    private static ArrayList<Destroyer> listDestroyerO = new ArrayList();
-    private static ArrayList<SousMarin> listSousmarinO = new ArrayList();
+    private static ArrayList<Cuirasse> listCuirasseJ = new ArrayList<Cuirasse>();
+    private static ArrayList<Croiseur> listCroiseurJ = new ArrayList<Croiseur>();
+    private static ArrayList<Destroyer> listDestroyerJ = new ArrayList<Destroyer>();
+    private static ArrayList<SousMarin> listSousmarinJ = new ArrayList<SousMarin>();
+    private static ArrayList<Cuirasse> listCuirasseO = new ArrayList<Cuirasse>();
+    private static ArrayList<Croiseur> listCroiseurO = new ArrayList<Croiseur>();
+    private static ArrayList<Destroyer> listDestroyerO = new ArrayList<Destroyer>();
+    private static ArrayList<SousMarin> listSousmarinO = new ArrayList<SousMarin>();
 
     public static void main(String[] args) {
 
@@ -43,17 +43,14 @@ public class Menu {
                 case 1:
                     jouerPartie();
                     break;
-
                 case 2:
                     chargerPartie();
                     break;
                 case 3:
                     ouvrirAide();
                     break;
-
             }
         } while (nombre != 4);
-        scan.close();
 
     }
 
@@ -62,11 +59,42 @@ public class Menu {
         Grille Grille2= new Grille();
         Joueur joueur1 = new Joueur(Grille1,Grille2);
         Joueur joueur2 = new Joueur(Grille2,Grille1);
+        int nombre;
+        do{ 
+            joueur1.getJGrille().dessiner();
+            joueur1.getOGrille().dessiner();
 
-        joueur1.getJGrille().dessiner();
-        joueur1.getOGrille().dessiner();
-        joueur2.getJGrille().dessiner();
-        joueur2.getOGrille().dessiner();
+            System.out.println("1. Tirer");
+            System.out.println("2. Déplacer");
+            System.out.println("3. Sauvegarder et Quitter");
+
+            System.out.println("\nSaissir une action:");
+            Scanner scan = new Scanner(System.in);
+            do {
+                nombre = scan.nextInt();
+                if ((nombre < 1) || (nombre > 3)) {
+                    System.out.println("le nombre n'est pas valide, ressaissir: ");
+                }
+            } while ((nombre < 1) || (nombre > 3));
+
+            switch(nombre)
+            {
+                case 1:
+                    ///choisir le bateau et tirer
+                    joueur1.getJGrille().getNavire().tire();
+                    break;
+
+                case 2: 
+                    /// choisir le bateau et bouger
+                    joueur1.getJGrille().getNavire().bouger(joueur1.getJGrille());
+                    break;
+                
+                case 3:
+                    //enregistrer
+                    break;
+            }
+
+        }while(nombre!=3);
     }
 
     public static void chargerPartie() {
