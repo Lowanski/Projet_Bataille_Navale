@@ -2,6 +2,7 @@ package com.ece;
 
 import javax.swing.text.StyledEditorKit;
 import java.awt.*;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -10,32 +11,37 @@ public class Grille {
 
     Navire[][] tableau = new Navire[15][15];
     Cuirasse cuirasse;
-    ArrayList<Croiseur> listCroiseur = new ArrayList();
-    ArrayList<Destroyer> listDestroyer = new ArrayList();
-    ArrayList<SousMarin> listSousmarin = new ArrayList();
+    ArrayList<Croiseur> listCroiseur = new ArrayList<Croiseur>();
+    ArrayList<Destroyer> listDestroyer = new ArrayList<Destroyer>();
+    ArrayList<SousMarin> listSousmarin = new ArrayList<SousMarin>();
+    ArrayList <Navire> Navires = new ArrayList<Navire>();
     String[] cons = {" 0 "," 1 "," 2 "," 3 "," 4 "," 5 "," 6 "," 7 "," 8 "," 9 ","10 ","11 ","12 ","13 ","14 "};
 
     Grille(){
         cuirasse= new Cuirasse();
         setPositionRandom(cuirasse);
+        Navires.add(cuirasse);
 
         for(int i =0; i<2;i++)
         {
             Croiseur croiseur = new Croiseur();
             setPositionRandom(croiseur);
             listCroiseur.add(croiseur);
+            Navires.add(croiseur);
         }
         for(int i =0; i<3;i++)
         {
             Destroyer destroyer = new Destroyer();
             setPositionRandom(destroyer);
             listDestroyer.add(destroyer);
+            Navires.add(destroyer);
         }
         for(int i =0; i<4;i++)
         {
             SousMarin sousMarin = new SousMarin();
             setPositionRandom(sousMarin);
             listSousmarin.add(sousMarin);
+            Navires.add(sousMarin);
         }
     }
 
@@ -91,13 +97,7 @@ public class Grille {
             System.out.println("|");
         }
         System.out.println("=================================================================");
-        System.out.println(cuirasse.getOrientation());
-        System.out.println(cuirasse.getCoord());
-        System.out.println(cuirasse.getTaille());
-        cuirasse.canGoDown(this);
-        cuirasse.canGoLeft(this);
-        cuirasse.canGoRight(this);
-        cuirasse.canGoUp(this);
+
     }
 
     public void setPositionRandom(Navire n) {
@@ -180,79 +180,24 @@ public class Grille {
         }
     }
 
+    public Navire getNavire(){
 
-    public static class SaisieErroneeException extends Exception {
-        public SaisieErroneeException(String s) {
-            super(s);
+        System.out.println("choississez un navire: ");
+        int choix;
+
+        for(int i=0; i<Navires.size();i++){
+            System.out.println(i+1 +". "+Navires.get(i));
         }
-    }
 
-    public static void controle(String direction) throws SaisieErroneeException {
-        if (!direction.equals("D") || !direction.equals("d") || !direction.equals("G") || !direction.equals("g")
-                || !direction.equals("H") || !direction.equals("h") || !direction.equals("B") || !direction.equals("b")
-                || !direction.equals("X") || !direction.equals("x")) {
-            throw new SaisieErroneeException(
-                    "Vous n'avez pas rentrer une direction ( g = Gauche , d = Droit , h = Haut , b = Bas");
-        }
-    }
-
-    public boolean bouger(Navire n){
-        String direction;
-        direction = saisirDirection(n);
-        direction.toUpperCase();
-        switch (direction){
-            case "D":{
-                boolean yes = n.canGoRight(this);
-                if (yes){
-                    n.goRight();
+        Scanner scan = new Scanner(System.in);
+            do {
+                choix = scan.nextInt();
+                if ((choix < 1) || (choix > 10)) {
+                    System.out.println("le nombre n'est pas valide, ressaissir: ");
                 }
-            }
+            } while ((choix < 1) || (choix > 10));
 
-            case "G":{
-                boolean yes = n.canGoLeft(this);
-                if (yes){
-                    n.goLeft();
-                }
-            }
-
-            case "H":{
-                boolean yes = n.canGoUp(this);
-                if (yes){
-                    n.goUp();
-                }
-            }
-
-            case "B":{
-                boolean yes = n.canGoDown(this);
-                if (yes){
-                    n.goDown();
-                }
-            }
-
-            case "X":{
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static String saisirDirection(Navire narive) {
-        Scanner sc = new Scanner(System.in);
-        boolean correct = false;
-        String directionEntre;
-        do {
-            System.out.println("Saisissez une direction pour le navire : " + narive);
-            System.out.println("Ou entrer \"X\" pour sortir du mode de déplacement");
-            directionEntre = sc.nextLine();
-            try {
-                controle(directionEntre);
-                correct = true;
-            } catch (SaisieErroneeException e) {
-                System.out.println(e);
-            }
-        } while (!correct);
-        sc.close();
-        return directionEntre;
+        return Navires.get(choix-1);
     }
 }
 
