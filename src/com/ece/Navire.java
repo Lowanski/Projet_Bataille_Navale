@@ -2,6 +2,7 @@ package com.ece;
 
 import java.awt.*;
 import java.util.Random;
+import java.util.Scanner;
 
 public abstract class Navire {
 
@@ -111,22 +112,126 @@ public abstract class Navire {
         
     }
 
-    protected void goDown(){
-
+    protected void goDown(Grille g){
+        System.out.println("deplacement en bas");
+        g.getTableau()[coord.x][coord.y]=null;
+        g.getTableau()[coord.x][coord.y+taille]=this;
+        coord.setLocation(coord.getX(), coord.getY()+1);
     }
 
-    protected void goUp(){
-
+    protected void goUp(Grille g){
+        System.out.println("deplacement en haut");
+        g.getTableau()[coord.x][coord.y+taille-1]=null;
+        g.getTableau()[coord.x][coord.y-1]=this;
+        coord.setLocation(coord.getX(), coord.getY()-1);
     }
 
-    protected void goLeft(){
-
+    protected void goLeft(Grille g){
+        System.out.println("deplacement a gauche");
+        g.getTableau()[coord.x+taille-1][coord.y]=null;
+        g.getTableau()[coord.x-1][coord.y]=this;
+        coord.setLocation(coord.getX()-1, coord.getY());
     }
 
-    protected void goRight(){
-
+    protected void goRight(Grille g){
+        System.out.println("deplacement a droite");
+        g.getTableau()[coord.x][coord.y]=null;
+        g.getTableau()[coord.x+taille][coord.y]=this;
+        coord.setLocation(coord.getX()+1, coord.getY());
     }
 
     abstract public void tire();
+
+    public static class SaisieErroneeException extends Exception {
+        public SaisieErroneeException(String s) {
+            super(s);
+        }
+    }
+
+    public static void controle(String direction) throws SaisieErroneeException {
+        if (!direction.equals("D") && !direction.equals("d") && !direction.equals("G") && !direction.equals("g")
+                && !direction.equals("H") && !direction.equals("h") && !direction.equals("B") && !direction.equals("b")
+                && !direction.equals("X") && !direction.equals("x")) {
+            throw new SaisieErroneeException(
+                    "Vous n'avez pas rentrer une direction ( g = Gauche , d = Droit , h = Haut , b = Bas");
+        }
+    }
+
+    private static String saisirDirection() {
+        Scanner sc = new Scanner(System.in);
+        boolean correct = false;
+        String directionEntre;
+        do {
+            System.out.println("Saisissez une direction pour le navire : " );
+            System.out.println("Ou entrer \"X\" pour sortir du mode de déplacement");
+            directionEntre = sc.nextLine();
+            try {
+                controle(directionEntre);
+                correct = true;
+            } catch (SaisieErroneeException e) {
+                System.out.println(e);
+            }
+        } while (!correct);
+        return directionEntre;
+    }
+
+    public boolean bouger(Grille g){
+        String direction;
+        boolean pass=false;
+        do{
+        direction = saisirDirection();
+        direction=direction.toUpperCase();
+        switch (direction){
+            case "D":{
+                boolean yes = canGoRight(g);
+                if (yes){
+                    goRight(g);
+                    pass=true;
+                }
+                else{System.out.println("vous ne pouvez pas aller a droite");
+                }
+                break;
+            }
+
+            case "G":{
+                boolean yes = canGoLeft(g);
+                if (yes){
+                    goLeft(g);
+                    pass=true;
+                }
+                else{System.out.println("vous ne pouvez pas aller a gauche");
+                }
+                break;
+            }
+
+            case "H":{
+                boolean yes = canGoUp(g);
+                if (yes){
+                    goUp(g);
+                    pass=true;
+                }
+                else{System.out.println("vous ne pouvez pas monter");
+                }
+                break;
+            }
+
+            case "B":{
+                boolean yes = canGoDown(g);
+                if (yes){
+                    goDown(g);
+                    pass=true;
+                }
+                else{System.out.println("vous ne pouvez pas descendre");
+                }
+                break;
+            }
+            case "X":{
+                return false;
+            }
+        }
+        }while(!pass);
+        g.getTableau()[coord.x][coord.y]=this;
+        return true;
+    }
 
 }
