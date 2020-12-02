@@ -2,12 +2,12 @@ package com.ece;
 
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.lang.model.util.ElementScanner14;
 
 public class Menu {
 
@@ -53,7 +53,7 @@ public class Menu {
                     break;
             }
         } while (nombre != 4);
-
+        scan.close();
     }
 
     public static void jouerPartie() {
@@ -83,13 +83,20 @@ public class Menu {
             {
                 case 1:
                     ///choisir le bateau et tirer
-                    Point touchee=joueur1.getJGrille().getNavire().tire();
-                    joueur1.getOGrille().rechercheNavire(touchee).impactTire(touchee);
+                    Point pointImpact=joueur1.getJGrille().getNavire().tirer();
+                    if (joueur1.getOGrille().getTableau()[pointImpact.x][pointImpact.y] != null)
+                        joueur1.getOGrille().rechercheNavire(pointImpact).impactTire(pointImpact);
+                    else
+                        System.out.println("Vous avez manque la cible");
                     break;
 
                 case 2: 
-                    /// choisir le bateau et bouger
-                    joueur1.getJGrille().getNavire().bouger(joueur1.getJGrille());
+                    /// choisir le bateau et bouger si il peut
+                    boolean ok;
+                    do{
+                        ok=joueur2.getJGrille().getNavire().canMove(joueur2.getJGrille());
+                    }while(!ok);
+                    
                     break;
                 
                 case 3:
@@ -314,11 +321,9 @@ public class Menu {
 
 
         //trouvé ça sur internet a tester
-       
-        //File path = new File(".");
-       // File[] list=path.listFiles();
-
-       //Desktop.getDesktop().browse(htmlFile.toURI());      */
+       /*
+        File htmlFile = new File(url);
+       Desktop.getDesktop().browse(htmlFile.toURI());      */
     }
 
 }

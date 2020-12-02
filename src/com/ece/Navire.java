@@ -235,35 +235,69 @@ public abstract class Navire {
         return true;
     }
 
+    public boolean canMove(Grille g){
+        int touch=0;
+        for(Object i : toucherTab){
+            if((int)i!=0){
+                touch++;
+            }
+        }
+        if(touch!=0){
+            System.out.println(this+" ne peut pas bouger car il est touche");
+            return false;
+        }
+        else{
+            bouger(g);
+            return true;
+        }
+        
+    }
 
-    public Point tire(){
-        System.out.println("choisissez des coordonnées de tire: ");
+    public Point tirer(){
+        
+        String chaine=new String();
+        char x=' ';
+        String y=new String();
+        int convert;
+
         Scanner scan =new Scanner(System.in);
         Point tir=new Point();
-        tir.x= scan.nextInt();
-        tir.y=scan.nextInt();
-
-        return tir;
         
+        do{
+            System.out.println("choisissez des coordonnées de tire: ex(B12)");
+            chaine= scan.nextLine();
+           
+            /// FAIRE UN TRY CATCH POUR GERER les mauvaises entrées @LOWAN -----------------------------------------
+            x=chaine.charAt(0);
+            y=chaine.substring(1);
+            convert=Integer.parseInt(y);
+
+        }while( ((x<'a')&&(x>'o') ) && ((convert<=15)&&(convert>=0)));
+
+        tir.x= Character.getNumericValue(x) - 10;
+        tir.y=convert;
+        
+        System.out.println(tir);
+        return tir;
     }
 
     public void impactTire(Point impact){
 
         System.out.println("toucher");
         System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord);
-        this.setId(0);
         if(getOrientation()=="verticale"){
-            //getToucherTab()[]=1;
-            System.out.println(getOrientation()+" impact: "+impact.y+ "coord bateau: "+coord.y);
             toucherTab[impact.y-coord.y]=1;
         }
         else{
             toucherTab[impact.x-coord.x]=1;
-            System.out.println(getOrientation()+" impact: "+impact.x+ "coord bateau: "+coord.x);
-           // getToucherTab()[impact.x-coord.x]=1;
         }
+
+        int nb=0;
         for(Object i: toucherTab){
-            System.out.print((int)i+" ");
+            if((int)i==1){nb++;}
+        }                                           
+        if(nb==taille){
+            //this.setId(0);;
         }
     }
 }
