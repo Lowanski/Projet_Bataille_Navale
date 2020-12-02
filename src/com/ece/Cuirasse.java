@@ -12,8 +12,4 @@ public class Cuirasse extends Navire{
     }
 
 
-    @Override
-    public void tire() {
-
-    }
 }

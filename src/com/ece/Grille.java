@@ -1,6 +1,8 @@
 package com.ece;
 
 import javax.swing.text.StyledEditorKit;
+
+
 import java.awt.*;
 import java.nio.file.FileSystemAlreadyExistsException;
 import java.util.ArrayList;
@@ -198,6 +200,11 @@ public class Grille {
             } while ((choix < 1) || (choix > 10));
 
         return Navires.get(choix-1);
+    }
+
+    public Navire rechercheNavire(Point p){
+
+        return this.getTableau()[p.x][p.y];
     }
 }
 

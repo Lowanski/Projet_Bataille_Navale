@@ -10,12 +10,7 @@ public class Croiseur extends Navire{
         this.setId(2);
         this.setPuissanceTire(4);
         this.setToucherTab(new int[this.getTaille()]);
-
     }
 
 
-    @Override
-    public void tire() {
-
-    }
 }

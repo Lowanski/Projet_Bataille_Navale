@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.Random;
 import java.util.Scanner;
 
+
+
 public abstract class Navire {
 
     private Point coord;
@@ -140,8 +142,6 @@ public abstract class Navire {
         coord.setLocation(coord.getX()+1, coord.getY());
     }
 
-    abstract public void tire();
-
     public static class SaisieErroneeException extends Exception {
         public SaisieErroneeException(String s) {
             super(s);
@@ -231,7 +231,39 @@ public abstract class Navire {
         }
         }while(!pass);
         g.getTableau()[coord.x][coord.y]=this;
+        System.out.println("Deplacement de "+ this +" sur "+ coord);
         return true;
     }
 
+
+    public Point tire(){
+        System.out.println("choisissez des coordonnées de tire: ");
+        Scanner scan =new Scanner(System.in);
+        Point tir=new Point();
+        tir.x= scan.nextInt();
+        tir.y=scan.nextInt();
+
+        return tir;
+        
+    }
+
+    public void impactTire(Point impact){
+
+        System.out.println("toucher");
+        System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord);
+        this.setId(0);
+        if(getOrientation()=="verticale"){
+            //getToucherTab()[]=1;
+            System.out.println(getOrientation()+" impact: "+impact.y+ "coord bateau: "+coord.y);
+            toucherTab[impact.y-coord.y]=1;
+        }
+        else{
+            toucherTab[impact.x-coord.x]=1;
+            System.out.println(getOrientation()+" impact: "+impact.x+ "coord bateau: "+coord.x);
+           // getToucherTab()[impact.x-coord.x]=1;
+        }
+        for(Object i: toucherTab){
+            System.out.print((int)i+" ");
+        }
+    }
 }

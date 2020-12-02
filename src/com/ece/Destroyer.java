@@ -12,8 +12,5 @@ public class Destroyer extends Navire{
     }
 
 
-    @Override
-    public void tire() {
-
-    }
+    
 }

@@ -2,10 +2,12 @@ package com.ece;
 
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class Menu {
 
@@ -81,7 +83,8 @@ public class Menu {
             {
                 case 1:
                     ///choisir le bateau et tirer
-                    joueur1.getJGrille().getNavire().tire();
+                    Point touchee=joueur1.getJGrille().getNavire().tire();
+                    joueur1.getOGrille().rechercheNavire(touchee).impactTire(touchee);
                     break;
 
                 case 2: 
@@ -311,9 +314,11 @@ public class Menu {
 
 
         //trouvé ça sur internet a tester
-       /*
-        File htmlFile = new File(url);
-       Desktop.getDesktop().browse(htmlFile.toURI());      */
+       
+        //File path = new File(".");
+       // File[] list=path.listFiles();
+
+       //Desktop.getDesktop().browse(htmlFile.toURI());      */
     }
 
 }

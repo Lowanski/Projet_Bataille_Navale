@@ -12,8 +12,4 @@ public class SousMarin extends Navire{
 
 
 
-    @Override
-    public void tire() {
-
-    }
 }
