@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.lang.model.util.ElementScanner14;
 
 public class Menu {
 
@@ -83,11 +82,11 @@ public class Menu {
             {
                 case 1:
                     ///choisir le bateau et tirer
-                    Point pointImpact=joueur1.getJGrille().getNavire().tirer();
-                    if (joueur1.getOGrille().getTableau()[pointImpact.x][pointImpact.y] != null)
-                        joueur1.getOGrille().rechercheNavire(pointImpact).impactTire(pointImpact);
-                    else
-                        System.out.println("Vous avez manque la cible");
+                    Navire tireur=joueur1.getJGrille().getNavire();
+                    Point impact =tireur.saisirTir();
+
+                    joueur1.getOGrille().rechercheNavire(impact,tireur.getPuissanceTire());
+
                     break;
 
                 case 2: 

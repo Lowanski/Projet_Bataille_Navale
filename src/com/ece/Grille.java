@@ -3,6 +3,7 @@ package com.ece;
 import javax.swing.text.StyledEditorKit;
 
 
+
 import java.awt.*;
 import java.nio.file.FileSystemAlreadyExistsException;
 import java.util.ArrayList;
@@ -202,9 +203,142 @@ public class Grille {
         return Navires.get(choix-1);
     }
 
-    public Navire rechercheNavire(Point p){
+    public void checkNavire(int x,int y){
+        Point p=new Point();
+        p.setLocation(x, y);
+        if(getTableau()[x][y]!=null){
+            getTableau()[x][y].impactTire(p);
+        }
+        
+    }
 
-        return this.getTableau()[p.x][p.y];
+    public boolean checkTirePossible(Point p,int puissance){
+        
+        boolean possible=false;
+
+        if(puissance==4){
+            if((p.x==14)&&(p.y<14)){
+                checkNavire(p.x, p.y);
+                checkNavire(p.x, p.y+1);
+                possible=true;
+            }
+            if((p.x<14)&&(p.y==14)){
+                checkNavire(p.x, p.y);
+                checkNavire(p.x+1, p.y);
+                possible=true;
+            }
+            if((p.x==14)&&(p.y==14)){
+                checkNavire(p.x, p.y);
+            }
+        }
+        if(puissance==9){
+            if(p.x<1){
+                checkNavire(p.x, p.y-1);
+                checkNavire(p.x, p.y);
+                checkNavire(p.x, p.y+1);
+
+                checkNavire(p.x+1, p.y-1);
+                checkNavire(p.x+1, p.y);
+                checkNavire(p.x+1, p.y+1);
+
+                possible=true;
+            }
+
+            if(p.y<1){
+                checkNavire(p.x-1, p.y);
+                checkNavire(p.x, p.y);
+                checkNavire(p.x+1, p.y);
+
+                checkNavire(p.x-1, p.y+1);
+                checkNavire(p.x, p.y+1);
+                checkNavire(p.x+1, p.y+1);
+
+                possible=true;
+            }
+
+            if(p.y>=14){
+                checkNavire(p.x-1, p.y);
+                checkNavire(p.x, p.y);
+                checkNavire(p.x+1, p.y);
+
+                checkNavire(p.x-1, p.y-1);
+                checkNavire(p.x, p.y-1);
+                checkNavire(p.x+1, p.y-1);
+
+                possible=true;
+            }
+            if(p.x>=14){
+                checkNavire(p.x, p.y-1);
+                checkNavire(p.x, p.y);
+                checkNavire(p.x, p.y+1);
+
+                checkNavire(p.x-1, p.y-1);
+                checkNavire(p.x-1, p.y);
+                checkNavire(p.x-1, p.y+1);
+
+                possible=true;
+            }
+
+            if((p.x==0)&&(p.y==0)){
+                checkNavire(p.x, p.y);
+                checkNavire(p.x+1, p.y);
+                checkNavire(p.x, p.y);
+                checkNavire(p.x+1, p.y+1);
+                possible=true;
+            }
+            if((p.x==0)&&(p.y==14)){
+                checkNavire(p.x, p.y-1);
+                checkNavire(p.x, p.y);
+                checkNavire(p.x-1, p.y-1);
+                checkNavire(p.x+1, p.y);
+                possible=true;
+            }
+            if((p.x==14)&&(p.y==0)){
+                checkNavire(p.x-1, p.y);
+                checkNavire(p.x-1, p.y+1);
+                checkNavire(p.x, p.y);
+                checkNavire(p.x, p.y+1);
+                possible=true;
+            }
+            if((p.x==14)&&(p.y==14)){
+                checkNavire(p.x, p.y);
+                checkNavire(p.x-1, p.y);
+                checkNavire(p.x, p.y-1);
+                checkNavire(p.x-1, p.y-1);
+                possible=true;
+            }
+        }
+        return possible;
+    }
+
+    public void rechercheNavire(Point p,int puissance){
+
+        boolean possible=checkTirePossible(p,puissance);
+
+        if(!possible){
+            if(puissance==9){
+            checkNavire(p.x-1, p.y-1);
+            checkNavire(p.x, p.y-1);
+            checkNavire(p.x+1, p.y-1);
+
+            checkNavire(p.x-1, p.y);
+            checkNavire(p.x, p.y);
+            checkNavire(p.x+1, p.y);
+
+            checkNavire(p.x-1, p.y+1);
+            checkNavire(p.x, p.y+1);
+            checkNavire(p.x+1, p.y+1);
+            }
+            else if(puissance==4){
+            checkNavire(p.x, p.y);
+            checkNavire(p.x+1, p.y);
+            checkNavire(p.x, p.y+1);
+            checkNavire(p.x+1, p.y+1);
+            }
+            else{
+            checkNavire(p.x, p.y);
+            }
+        }
     }
 }
 

@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 
 
+
 public abstract class Navire {
 
     private Point coord;
@@ -253,7 +254,11 @@ public abstract class Navire {
         
     }
 
-    public Point tirer(){
+    public Point tirer(Point p){
+        return p;
+    }
+
+    public Point saisirTir(){
         
         String chaine=new String();
         char x=' ';
@@ -278,26 +283,26 @@ public abstract class Navire {
         tir.y=convert;
         
         System.out.println(tir);
-        return tir;
+        return tirer(tir);
     }
 
     public void impactTire(Point impact){
 
-        System.out.println("toucher");
-        System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord);
-        if(getOrientation()=="verticale"){
-            toucherTab[impact.y-coord.y]=1;
-        }
-        else{
-            toucherTab[impact.x-coord.x]=1;
-        }
+             System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord +"est touche au point : "+impact);
+             if(getOrientation()=="verticale"){
+                 toucherTab[impact.y-coord.y]=1;
+             }
+            else{
+               toucherTab[impact.x-coord.x]=1;
+            }
 
-        int nb=0;
-        for(Object i: toucherTab){
-            if((int)i==1){nb++;}
-        }                                           
-        if(nb==taille){
-            //this.setId(0);;
-        }
+            int nb=0;
+            for(Object i: toucherTab){
+                if((int)i!=0){nb++;}
+            }                                           
+            if(nb==taille){
+                 this.setId(0);
+                 System.out.println(this+" a ete coulee");
+            }
     }
 }
