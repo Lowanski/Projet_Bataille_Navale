@@ -1,6 +1,8 @@
 package com.ece;
 
-public class Destroyer extends Navire{
+import java.io.Serializable;
+
+public class Destroyer extends Navire implements Serializable {
 
 
 

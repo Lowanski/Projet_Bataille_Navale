@@ -1,9 +1,7 @@
 package com.ece;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -45,7 +43,7 @@ public class Menu {
                     jouerPartie();
                     break;
                 case 2:
-                    chargerPartie();
+                    chargerPartieSerial();
                     break;
                 case 3:
                     ouvrirAide();
@@ -54,6 +52,7 @@ public class Menu {
         } while (nombre != 4);
         scan.close();
     }
+
 
     public static void jouerPartie() {
         Grille Grille1= new Grille();
@@ -99,11 +98,118 @@ public class Menu {
                     break;
                 
                 case 3:
-                    //enregistrer
+                    sauvegarderPartie(joueur1,joueur2);
                     break;
             }
 
         }while(nombre!=3);
+    }
+
+    private static void chargerPartieSerial() {
+        Joueur joueur1 = null;
+        Joueur joueur2 = null;
+
+        try {
+            // ouverture d'un flux d'entrée depuis le fichier "personne.serial"
+            FileInputStream fis = new FileInputStream("Save/partieSave.serial"); // création d'un "flux objet" avec le flux fichier
+            ObjectInputStream ois= new ObjectInputStream(fis);
+            try {
+                // désérialisation : lecture de l'objet depuis le flux d'entrée
+                joueur1 = (Joueur) ois.readObject();
+                joueur2 = (Joueur) ois.readObject();
+            }
+            finally {
+                // on ferme les flux
+                try {
+                    ois.close();
+                }
+                finally {
+                    fis.close();
+                }
+            }
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        } catch(ClassNotFoundException cnfe) {
+            cnfe.printStackTrace();
+        }
+        if(joueur1 != null) {
+            System.out.println(joueur1 + " a ete deserialise");
+        }
+        if(joueur2 != null) {
+            System.out.println(joueur2 + " a ete deserialise");
+        }
+
+        int nombre;
+        do{
+            joueur1.getJGrille().dessiner();
+            joueur1.getOGrille().dessiner();
+
+            System.out.println("1. Tirer");
+            System.out.println("2. Déplacer");
+            System.out.println("3. Sauvegarder et Quitter");
+
+            System.out.println("\nSaissir une action:");
+            Scanner scan = new Scanner(System.in);
+            do {
+                nombre = scan.nextInt();
+                if ((nombre < 1) || (nombre > 3)) {
+                    System.out.println("le nombre n'est pas valide, ressaissir: ");
+                }
+            } while ((nombre < 1) || (nombre > 3));
+
+            switch(nombre)
+            {
+                case 1:
+                    ///choisir le bateau et tirer
+                    Navire tireur=joueur1.getJGrille().getNavire();
+                    Point impact =tireur.saisirTir();
+
+                    joueur1.getOGrille().rechercheNavire(impact,tireur.getPuissanceTire());
+
+                    break;
+
+                case 2:
+                    /// choisir le bateau et bouger si il peut
+                    boolean ok;
+                    do{
+                        ok=joueur2.getJGrille().getNavire().canMove(joueur2.getJGrille());
+                    }while(!ok);
+
+                    break;
+
+                case 3:
+                    sauvegarderPartie(joueur1,joueur2);
+                    break;
+            }
+
+        }while(nombre!=3);
+    }
+
+    public static void sauvegarderPartie(Joueur j1, Joueur j2){
+        try {
+            FileOutputStream fos = new FileOutputStream("Save/partieSave.serial");
+            ObjectOutputStream oos= new ObjectOutputStream(fos);
+            try {
+                // sérialisation : écriture de l'objet dans le flux de sortie
+                oos.writeObject(j1);
+                oos.writeObject(j2);
+                // on vide le tampon
+                oos.flush();
+                System.out.println(j1 + " a ete serialise");
+                System.out.println(j2 + " a ete serialise");
+            }
+            finally {
+                //fermeture des flux
+                try {
+                    oos.close();
+                }
+                finally {
+                    fos.close();
+                }
+            }
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 
     public static void chargerPartie() {

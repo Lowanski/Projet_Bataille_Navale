@@ -1,7 +1,9 @@
 package com.ece;
 
 
-public class Croiseur extends Navire{
+import java.io.Serializable;
+
+public class Croiseur extends Navire implements Serializable {
 
 
 

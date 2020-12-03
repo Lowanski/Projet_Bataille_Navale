@@ -1,13 +1,14 @@
 package com.ece;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 import java.util.Scanner;
 
 
 
 
-public abstract class Navire {
+public abstract class Navire implements Serializable {
 
     private Point coord;
     private String orientation; // verticale ; horizontale

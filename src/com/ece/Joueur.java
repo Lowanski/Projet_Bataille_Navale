@@ -1,6 +1,9 @@
 package com.ece;
 
-public class Joueur {
+import java.io.Serializable;
+
+public class Joueur implements Serializable {
+    static private final long serialVersionUID = 6L;
     private Grille jGrille;
     private Grille oGrille;
 
