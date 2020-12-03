@@ -232,7 +232,7 @@ public class Grille {
             }
         }
         if(puissance==9){
-            if(p.x<1){
+            if((p.x==0)&&((p.y!=14)&&(p.y!=0))){
                 checkNavire(p.x, p.y-1);
                 checkNavire(p.x, p.y);
                 checkNavire(p.x, p.y+1);
@@ -244,7 +244,19 @@ public class Grille {
                 possible=true;
             }
 
-            if(p.y<1){
+            if((p.x==14)&&((p.y!=0)&&(p.y!=14))){
+                checkNavire(p.x, p.y-1);
+                checkNavire(p.x, p.y);
+                checkNavire(p.x, p.y+1);
+
+                checkNavire(p.x-1, p.y-1);
+                checkNavire(p.x-1, p.y);
+                checkNavire(p.x-1, p.y+1);
+
+                possible=true;
+            }
+
+            if( (p.y==0) && ((p.x!=0)&&(p.x!=14)) ){
                 checkNavire(p.x-1, p.y);
                 checkNavire(p.x, p.y);
                 checkNavire(p.x+1, p.y);
@@ -255,8 +267,7 @@ public class Grille {
 
                 possible=true;
             }
-
-            if(p.y>=14){
+            if( (p.y==14) && ((p.x!=0)&&(p.x!=14)) ){
                 checkNavire(p.x-1, p.y);
                 checkNavire(p.x, p.y);
                 checkNavire(p.x+1, p.y);
@@ -264,17 +275,6 @@ public class Grille {
                 checkNavire(p.x-1, p.y-1);
                 checkNavire(p.x, p.y-1);
                 checkNavire(p.x+1, p.y-1);
-
-                possible=true;
-            }
-            if(p.x>=14){
-                checkNavire(p.x, p.y-1);
-                checkNavire(p.x, p.y);
-                checkNavire(p.x, p.y+1);
-
-                checkNavire(p.x-1, p.y-1);
-                checkNavire(p.x-1, p.y);
-                checkNavire(p.x-1, p.y+1);
 
                 possible=true;
             }
@@ -282,14 +282,14 @@ public class Grille {
             if((p.x==0)&&(p.y==0)){
                 checkNavire(p.x, p.y);
                 checkNavire(p.x+1, p.y);
-                checkNavire(p.x, p.y);
+                checkNavire(p.x, p.y+1);
                 checkNavire(p.x+1, p.y+1);
                 possible=true;
             }
             if((p.x==0)&&(p.y==14)){
                 checkNavire(p.x, p.y-1);
                 checkNavire(p.x, p.y);
-                checkNavire(p.x-1, p.y-1);
+                checkNavire(p.x+1, p.y-1);
                 checkNavire(p.x+1, p.y);
                 possible=true;
             }
