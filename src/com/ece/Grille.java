@@ -203,140 +203,202 @@ public class Grille {
         return Navires.get(choix-1);
     }
 
-    public void checkNavire(int x,int y){
+    public void checkDestroyer(Destroyer tireur){
+        String choix =new String();
+        Scanner sc = new Scanner(System.in);
+        
+        if(tireur.getFusee()){
+            boolean ok=false;
+            do{
+                System.out.println("Il vous reste 1 fusee eclairante avec ce Destroyer, voulez-vous l'utiliser ? (y/n)");
+                choix=sc.nextLine();
+                if((choix.equals("y"))||(choix.equals("n"))||(choix.equals("yes"))||(choix.equals("no"))){
+                    ok=true;
+                    if((choix.equals("y"))||(choix.equals("yes"))){
+                        tireur.setFusee(false);
+                    }
+                }
+            }while(!ok);
+        }
+    }
+
+    public void checkNavire(int x,int y,Navire tireur){
         Point p=new Point();
         p.setLocation(x, y);
         if(getTableau()[x][y]!=null){
-            getTableau()[x][y].impactTire(p);
+            getTableau()[x][y].impactTire(p,tireur);
         }
+
         
     }
 
-    public boolean checkTirePossible(Point p,int puissance){
+    public boolean checkTirePossible(Point p,Navire tireur){
         
         boolean possible=false;
 
-        if(puissance==4){
+        if(tireur.getPuissanceTire()==4){
             if((p.x==14)&&(p.y<14)){
-                checkNavire(p.x, p.y);
-                checkNavire(p.x, p.y+1);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x, p.y+1,tireur);
                 possible=true;
             }
             if((p.x<14)&&(p.y==14)){
-                checkNavire(p.x, p.y);
-                checkNavire(p.x+1, p.y);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x+1, p.y,tireur);
                 possible=true;
             }
             if((p.x==14)&&(p.y==14)){
-                checkNavire(p.x, p.y);
+                checkNavire(p.x, p.y,tireur);
             }
         }
-        if(puissance==9){
+        if(tireur.getPuissanceTire()==9){
             if((p.x==0)&&((p.y!=14)&&(p.y!=0))){
-                checkNavire(p.x, p.y-1);
-                checkNavire(p.x, p.y);
-                checkNavire(p.x, p.y+1);
+                for(int i=p.x; i<p.x+2; i++){
+                    for(int j=p.y-1; j<p.y+2; j++){
+                        checkNavire(i, j,tireur);
+                    }
+                }
+                /*checkNavire(p.x, p.y-1,tireur);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x, p.y+1,tireur);
 
-                checkNavire(p.x+1, p.y-1);
-                checkNavire(p.x+1, p.y);
-                checkNavire(p.x+1, p.y+1);
-
+                checkNavire(p.x+1, p.y-1,tireur);
+                checkNavire(p.x+1, p.y,tireur);
+                checkNavire(p.x+1, p.y+1,tireur);
+                */
                 possible=true;
             }
 
             if((p.x==14)&&((p.y!=0)&&(p.y!=14))){
-                checkNavire(p.x, p.y-1);
-                checkNavire(p.x, p.y);
-                checkNavire(p.x, p.y+1);
 
-                checkNavire(p.x-1, p.y-1);
-                checkNavire(p.x-1, p.y);
-                checkNavire(p.x-1, p.y+1);
+                for(int i=p.x-1; i<p.x+1; i++){
+                    for(int j=p.y-1; j<p.y+2; j++){
+                        checkNavire(i, j,tireur);
+                    }
+                }
+                /*
+                checkNavire(p.x, p.y-1,tireur);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x, p.y+1,tireur);
 
+                checkNavire(p.x-1, p.y-1,tireur);
+                checkNavire(p.x-1, p.y,tireur);
+                checkNavire(p.x-1, p.y+1,tireur);
+                */
                 possible=true;
             }
 
             if( (p.y==0) && ((p.x!=0)&&(p.x!=14)) ){
-                checkNavire(p.x-1, p.y);
-                checkNavire(p.x, p.y);
-                checkNavire(p.x+1, p.y);
 
-                checkNavire(p.x-1, p.y+1);
-                checkNavire(p.x, p.y+1);
-                checkNavire(p.x+1, p.y+1);
+                for(int i=p.x-1; i<p.x+2; i++){
+                    for(int j=p.y; j<p.y+2; j++){
+                        checkNavire(i, j,tireur);
+                    }
+                }
+                /*
+                checkNavire(p.x-1, p.y,tireur);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x+1, p.y,tireur);
 
+                checkNavire(p.x-1, p.y+1,tireur);
+                checkNavire(p.x, p.y+1,tireur);
+                checkNavire(p.x+1, p.y+1,tireur);
+                */
                 possible=true;
             }
             if( (p.y==14) && ((p.x!=0)&&(p.x!=14)) ){
-                checkNavire(p.x-1, p.y);
-                checkNavire(p.x, p.y);
-                checkNavire(p.x+1, p.y);
 
-                checkNavire(p.x-1, p.y-1);
-                checkNavire(p.x, p.y-1);
-                checkNavire(p.x+1, p.y-1);
+                for(int i=p.x-1; i<p.x+2; i++){
+                    for(int j=p.y-1; j<p.y+1; j++){
+                        checkNavire(i, j,tireur);
+                    }
+                }
+                /*
+                checkNavire(p.x-1, p.y,tireur);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x+1, p.y,tireur);
 
+                checkNavire(p.x-1, p.y-1,tireur);
+                checkNavire(p.x, p.y-1,tireur);
+                checkNavire(p.x+1, p.y-1,tireur);
+                */
                 possible=true;
             }
 
             if((p.x==0)&&(p.y==0)){
-                checkNavire(p.x, p.y);
-                checkNavire(p.x+1, p.y);
-                checkNavire(p.x, p.y+1);
-                checkNavire(p.x+1, p.y+1);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x+1, p.y,tireur);
+                checkNavire(p.x, p.y+1,tireur);
+                checkNavire(p.x+1, p.y+1,tireur);
                 possible=true;
             }
             if((p.x==0)&&(p.y==14)){
-                checkNavire(p.x, p.y-1);
-                checkNavire(p.x, p.y);
-                checkNavire(p.x+1, p.y-1);
-                checkNavire(p.x+1, p.y);
+                checkNavire(p.x, p.y-1,tireur);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x+1, p.y-1,tireur);
+                checkNavire(p.x+1, p.y,tireur);
                 possible=true;
             }
             if((p.x==14)&&(p.y==0)){
-                checkNavire(p.x-1, p.y);
-                checkNavire(p.x-1, p.y+1);
-                checkNavire(p.x, p.y);
-                checkNavire(p.x, p.y+1);
+                checkNavire(p.x-1, p.y,tireur);
+                checkNavire(p.x-1, p.y+1,tireur);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x, p.y+1,tireur);
                 possible=true;
             }
             if((p.x==14)&&(p.y==14)){
-                checkNavire(p.x, p.y);
-                checkNavire(p.x-1, p.y);
-                checkNavire(p.x, p.y-1);
-                checkNavire(p.x-1, p.y-1);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x-1, p.y,tireur);
+                checkNavire(p.x, p.y-1,tireur);
+                checkNavire(p.x-1, p.y-1,tireur);
                 possible=true;
             }
+        }
+        if((tireur.getPuissanceTire()==16)&&((p.y>11)||(p.x>11))){
+            for(int i=p.y ; i<= 14 ;i++){
+                for(int j=p.x ; i<=14; i++){
+                    checkNavire(j, i,tireur);
+                }
+            }
+            possible=true;
         }
         return possible;
     }
 
-    public void rechercheNavire(Point p,int puissance){
 
-        boolean possible=checkTirePossible(p,puissance);
+    public void rechercheNavire(Navire tireur){
+
+        if(tireur.getId()==3){
+            checkDestroyer((Destroyer)tireur);
+        }
+        
+        Point p=tireur.saisirTir();
+        
+        boolean possible=checkTirePossible(p,tireur);
 
         if(!possible){
-            if(puissance==9){
-            checkNavire(p.x-1, p.y-1);
-            checkNavire(p.x, p.y-1);
-            checkNavire(p.x+1, p.y-1);
-
-            checkNavire(p.x-1, p.y);
-            checkNavire(p.x, p.y);
-            checkNavire(p.x+1, p.y);
-
-            checkNavire(p.x-1, p.y+1);
-            checkNavire(p.x, p.y+1);
-            checkNavire(p.x+1, p.y+1);
+            if(tireur.getPuissanceTire()==9){
+                for(int i=p.x-1; i<p.x+2; i++){
+                    for(int j=p.y-1; j<p.y+2; j++){
+                        checkNavire(i, j,tireur);
+                    }
+                }
             }
-            else if(puissance==4){
-            checkNavire(p.x, p.y);
-            checkNavire(p.x+1, p.y);
-            checkNavire(p.x, p.y+1);
-            checkNavire(p.x+1, p.y+1);
+            else if(tireur.getPuissanceTire()==4){
+            checkNavire(p.x, p.y,tireur);
+            checkNavire(p.x+1, p.y,tireur);
+            checkNavire(p.x, p.y+1,tireur);
+            checkNavire(p.x+1, p.y+1, tireur);
+            }
+            else if(tireur.getPuissanceTire()==16){
+                for(int i=p.x; i<p.x+3; i++){
+                    for(int j=p.y; i<p.y+3; i++){
+                        checkNavire(i, j,tireur);
+                    }
+                }
             }
             else{
-            checkNavire(p.x, p.y);
+            checkNavire(p.x, p.y,tireur);
             }
         }
     }

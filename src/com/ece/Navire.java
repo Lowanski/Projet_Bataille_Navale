@@ -75,6 +75,13 @@ public abstract class Navire {
         this.orientation = orientation;
     }
 
+  /*  public boolean getFusee(){
+        return false;
+    }
+
+    public void setFusee(boolean b) {
+	}
+*/
     protected boolean canGoRight(Grille g) {
         if ((orientation == "horizontale")&& (getCoord().getX() + taille < 15 )&&(g.getTableau()[(int) getCoord().getX()+taille][(int) getCoord().getY()] == null)){
             return true;
@@ -286,16 +293,31 @@ public abstract class Navire {
         return tirer(tir);
     }
 
-    public void impactTire(Point impact){
+    public void impactTire(Point impact,Navire tireur){
 
-             System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord +"est touche au point : "+impact);
-             if(getOrientation()=="verticale"){
-                 toucherTab[impact.y-coord.y]=1;
-             }
-            else{
-               toucherTab[impact.x-coord.x]=1;
+            //System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord +"est touche au point : "+impact);
+        if(tireur.getPuissanceTire()!=16){  
+
+            if(this.getId()!=4){ //si ce n'est pas un sous-marin
+                
+                if(getOrientation()=="verticale"){
+                    toucherTab[impact.y-coord.y]=1;
+                }
+                else{
+                    toucherTab[impact.x-coord.x]=1;
+                }
+
+                System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord +"est touche au point : "+impact);
+
+            }else{ //si c'est un sous-marin
+                
+                if(tireur.getId()==4){ //si le tireur est un sous-marin
+                    toucherTab[0]=1;
+                    System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord +"est touche au point : "+impact);
+                }
             }
 
+            // on verifie si le bateau est coulee
             int nb=0;
             for(Object i: toucherTab){
                 if((int)i!=0){nb++;}
@@ -304,5 +326,11 @@ public abstract class Navire {
                  this.setId(0);
                  System.out.println(this+" a ete coulee");
             }
+
+        }else{
+            /// on montre son id
+        }
     }
+
+
 }

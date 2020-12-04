@@ -83,9 +83,7 @@ public class Menu {
                 case 1:
                     ///choisir le bateau et tirer
                     Navire tireur=joueur1.getJGrille().getNavire();
-                    Point impact =tireur.saisirTir();
-
-                    joueur1.getOGrille().rechercheNavire(impact,tireur.getPuissanceTire());
+                    joueur1.getOGrille().rechercheNavire(tireur);
 
                     break;
 
