@@ -1,6 +1,10 @@
 package com.ece;
 
-public class Joueur {
+import java.io.Serializable;
+
+public class Joueur implements Serializable {
+    static private final long serialVersionUID = 6L;
+    private int action;
     private Grille jGrille;
     private Grille oGrille;
 
@@ -14,5 +18,23 @@ public class Joueur {
     }
     public Grille getOGrille(){
         return oGrille;
+    }
+
+    public int getAction() {
+        return action;
+    }
+
+    public void setActionDebutTour() {
+        this.action = 1;
+    }
+
+    public boolean useAction(){
+        if (action > 0){
+            action--;
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

@@ -1,8 +1,8 @@
 package com.ece;
 
-import java.util.Scanner;
+import java.io.Serializable;
 
-public class Destroyer extends Navire{
+public class Destroyer extends Navire implements Serializable {
 
     private boolean fuse;
 
@@ -11,7 +11,7 @@ public class Destroyer extends Navire{
         this.setToucherTab(new int[this.getTaille()]);
         this.setId(3);
         this.setPuissanceTire(1);
-        fuse=true;
+        fuse =true;
     }
     
     public boolean getFusee(){

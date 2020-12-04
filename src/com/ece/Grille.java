@@ -1,16 +1,12 @@
 package com.ece;
 
-import javax.swing.text.StyledEditorKit;
-
-
-
 import java.awt.*;
-import java.nio.file.FileSystemAlreadyExistsException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Grille {
+public class Grille implements Serializable {
 
     Navire[][] tableau = new Navire[15][15];
     Cuirasse cuirasse;

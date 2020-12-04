@@ -1,6 +1,8 @@
 package com.ece;
 
-public class SousMarin extends Navire{
+import java.io.Serializable;
+
+public class SousMarin extends Navire implements Serializable {
 
 
     SousMarin(){

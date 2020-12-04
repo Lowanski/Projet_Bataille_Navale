@@ -1,7 +1,9 @@
 package com.ece;
 
 
-public class Cuirasse extends Navire{
+import java.io.Serializable;
+
+public class Cuirasse extends Navire implements Serializable {
 
 
     Cuirasse(){
