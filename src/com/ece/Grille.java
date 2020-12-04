@@ -99,35 +99,6 @@ public class Grille implements Serializable {
 
     }
 
-    public void dessinerenemi() {
-        System.out.println("   | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |");
-        System.out.println("=================================================================");
-        for(int i=0; i<15;i++)
-        {
-            System.out.print(cons[i]+ "|");
-            for(int j =0; j<15;j++)
-            {
-                if(tableau[j][i]!=null)
-                {
-                    int temp = casetouche(tableau[j][i],i,j);
-                    if(temp == 1)
-                    {
-                        System.out.print("000 ");
-                    }
-                    else
-                    {
-                        System.out.print("--- ");
-                    }
-                }
-                else{
-                    System.out.print("--- ");
-                }
-            }
-            System.out.println("|");
-        }
-        System.out.println("=================================================================");
-    }
-
     public void setPositionRandom(Navire n) {
         Random rand = new Random();
         Boolean isOk = false;
@@ -218,12 +189,12 @@ public class Grille implements Serializable {
         }
 
         Scanner scan = new Scanner(System.in);
-            do {
-                choix = scan.nextInt();
-                if ((choix < 1) || (choix > 10)) {
-                    System.out.println("le nombre n'est pas valide, ressaissir: ");
-                }
-            } while ((choix < 1) || (choix > 10));
+        do {
+            choix = scan.nextInt();
+            if ((choix < 1) || (choix > 10)) {
+                System.out.println("le nombre n'est pas valide, ressaissir: ");
+            }
+        } while ((choix < 1) || (choix > 10));
 
         return Navires.get(choix-1);
     }
@@ -231,7 +202,7 @@ public class Grille implements Serializable {
     public void checkDestroyer(Destroyer tireur){
         String choix =new String();
         Scanner sc = new Scanner(System.in);
-        
+
         if(tireur.getFusee()){
             boolean ok=false;
             do{
@@ -254,11 +225,11 @@ public class Grille implements Serializable {
             getTableau()[x][y].impactTire(p,tireur);
         }
 
-        
+
     }
 
     public boolean checkTirePossible(Point p,Navire tireur){
-        
+
         boolean possible=false;
 
         if(tireur.getPuissanceTire()==4){
@@ -396,9 +367,9 @@ public class Grille implements Serializable {
         if(tireur.getId()==3){
             checkDestroyer((Destroyer)tireur);
         }
-        
+
         Point p=tireur.saisirTir();
-        
+
         boolean possible=checkTirePossible(p,tireur);
 
         if(!possible){
@@ -410,10 +381,10 @@ public class Grille implements Serializable {
                 }
             }
             else if(tireur.getPuissanceTire()==4){
-            checkNavire(p.x, p.y,tireur);
-            checkNavire(p.x+1, p.y,tireur);
-            checkNavire(p.x, p.y+1,tireur);
-            checkNavire(p.x+1, p.y+1, tireur);
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x+1, p.y,tireur);
+                checkNavire(p.x, p.y+1,tireur);
+                checkNavire(p.x+1, p.y+1, tireur);
             }
             else if(tireur.getPuissanceTire()==16){
                 for(int i=p.x; i<p.x+3; i++){
@@ -423,30 +394,8 @@ public class Grille implements Serializable {
                 }
             }
             else{
-            checkNavire(p.x, p.y,tireur);
-            }
-        }
-    }
-
-    public int casetouche(Navire n,int i, int j){
-        int[] tempo = n.getToucherTab();
-        if(n.getOrientation() == "verticale")
-        {
-            if((tempo[i-n.getCoord().y])==1)
-            {
-                return 1;
-            }
-            else return 0;
-        }
-        else {
-            if((tempo[j-n.getCoord().x])==1)
-            {
-                return 1;
-            }
-            else {
-                return 0;
+                checkNavire(p.x, p.y,tireur);
             }
         }
     }
 }
-
