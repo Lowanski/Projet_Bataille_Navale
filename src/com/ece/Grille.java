@@ -229,6 +229,19 @@ public class Grille implements Serializable {
         return Navires.get(choix-1);
     }
 
+    public Navire getNavireIA(){
+        int choix;
+        Random rand = new Random();
+        do {
+            choix = rand.nextInt(11);
+            if ((choix < 1) || (choix > 10)) {
+                System.out.println("le nombre n'est pas valide, ressaissir: ");
+            }
+        } while ((choix < 1) || (choix > 10));
+
+        return Navires.get(choix-1);
+    }
+
     public void checkDestroyer(Destroyer tireur){
         String choix =new String();
         Scanner sc = new Scanner(System.in);

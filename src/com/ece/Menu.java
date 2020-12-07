@@ -84,11 +84,10 @@ public class Menu {
                     fis.close();
                 }
             }
-        } catch (IOException ioe) {
+        } catch (IOException | ClassNotFoundException ioe) {
             ioe.printStackTrace();
-        } catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
         }
+
         if (joueur1 != null) {
             System.out.println(joueur1 + " a ete deserialise");
         }
@@ -109,6 +108,7 @@ public class Menu {
             do {
                 joueur1.getJGrille().dessiner();
                 joueur1.getOGrille().dessiner();
+                joueur1.getOGrille().dessinerenemi();
 
                 System.out.println("1. Tirer");
                 System.out.println("2. Déplacer");
@@ -171,7 +171,7 @@ public class Menu {
                 boolean ok;
                 if (joueur1.useAction()) {
                     do {
-                        ok = joueur2.getJGrille().getNavire().canMove(joueur2.getJGrille());
+                        ok = joueur1.getJGrille().getNavire().canMove(joueur1.getJGrille());
                     } while (!ok);
                 }
                 joueur1.useAction();
