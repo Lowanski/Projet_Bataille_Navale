@@ -24,13 +24,7 @@ public class Destroyer extends Navire implements Serializable {
 
     @Override
     public int getPuissanceTire(){
-    
-       /* if(fuse){
-            return 16;
-        }
-        else{*/
             return puissanceTire;
-       // }
     }
 
     
