@@ -242,8 +242,7 @@ public abstract class Navire implements Serializable {
             System.out.println(this + " ne peut pas bouger car il est touche");
             return false;
         } else {
-            bouger(g);
-            return true;
+            return bouger(g);
         }
 
     }
@@ -335,9 +334,15 @@ public abstract class Navire implements Serializable {
             }
 
         }
-        else{
-            System.out.println("on ne tire pas on devoile seulement les cibles");
-            /// on montre son id
+        else{   // si c'est une fusee eclairante
+
+            if(getOrientation()=="verticale"){
+                toucherTab[impact.y-coord.y]=2;
+            }
+            else{
+                toucherTab[impact.x-coord.x]=2;
+            }
+            
         }
     }
 }

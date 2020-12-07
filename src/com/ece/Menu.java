@@ -5,6 +5,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.ece.Navire.SaisieErroneeException;
+
 
 public class Menu {
 
@@ -20,6 +22,7 @@ public class Menu {
     public static void main(String[] args) {
 
         int nombre;
+        String choix;
         Scanner scan = new Scanner(System.in);
         do {
             System.out.println("--------LA BATAILLE NAVAL--------\n");
@@ -30,13 +33,18 @@ public class Menu {
             System.out.println("4. Quitter");
 
             System.out.println("\nSaissir une action:");
-
+            boolean correct=false;
             do {
-                nombre = scan.nextInt();
-                if ((nombre < 1) || (nombre > 4)) {
-                    System.out.println("le nombre n'est pas valide, ressaissir: ");
+                choix= scan.nextLine();
+                try {
+                    controleMenu(choix);
+                    correct=true;
+                } catch (SaisieErroneeException e) {
+                    System.out.println(e);
                 }
-            } while ((nombre < 1) || (nombre > 4));
+            } while (!correct);
+
+            nombre= Integer.parseInt(choix);
 
             switch (nombre) {
                 case 1:
@@ -53,6 +61,12 @@ public class Menu {
         scan.close();
     }
 
+    public static void controleMenu(String choix) throws SaisieErroneeException {
+        if ((!choix.equals("1"))&&(!choix.equals("2"))&&(!choix.equals("3")&&(!choix.equals("4")))) {
+            throw new SaisieErroneeException(
+                    "Vous n'avez pas entrer une action valide, ressaisir: ");
+        }
+    }
 
     public static void jouerPartie() {
         Grille Grille1 = new Grille();
@@ -100,15 +114,25 @@ public class Menu {
 
     }
 
+    public static void controleAction(String choix) throws SaisieErroneeException {
+        if ((!choix.equals("1"))&&(!choix.equals("2"))&&(!choix.equals("3"))) {
+            throw new SaisieErroneeException(
+                    "Vous n'avez pas entrer une action valide, ressaisir: ");
+        }
+    }
+
     public static void play(Joueur joueur1, Joueur joueur2) {
         int etatPartie = 0; // Etat partie 1 = le joueur a joué | 0 = le jouer quitte la partie | -1 = un joueur a gagné la partie
+        int nombre;
         do {
-            int nombre = 0;
+            String choix;
+            boolean correct=false;
             joueur1.setActionDebutTour(); // initialise le nb d'action
             joueur2.setActionDebutTour();
             do {
                 joueur1.getJGrille().dessiner();
                 joueur1.getOGrille().dessiner();
+                joueur1.getOGrille().dessinerenemi();
 
                 System.out.println("1. Tirer");
                 System.out.println("2. Déplacer");
@@ -117,11 +141,16 @@ public class Menu {
                 System.out.println("\nSaissir une action:");
                 Scanner scan = new Scanner(System.in);
                 do {
-                    nombre = scan.nextInt();                                            // FAIRE UN TRY/CATCH CONTROLE SINON CRASH(idem que les autre controle juste changer les conditions d'erreurs
-                    if ((nombre < 1) || (nombre > 3)) {
-                        System.out.println("le nombre n'est pas valide, ressaissir: ");
-                    }
-                } while ((nombre < 1) || (nombre > 3));
+                    choix = scan.nextLine(); 
+                    try {
+                        controleAction(choix);
+                        correct=true;
+                    } catch (SaisieErroneeException e){
+                        System.out.println(e);
+                    }                                           
+                } while (!correct);
+
+                nombre= Integer.parseInt(choix);
 
                 etatPartie = doAction(joueur1, joueur2, nombre);
 
@@ -422,5 +451,7 @@ public class Menu {
     }
 
     public static void ouvrirAide(){
+
     }
+
 }
