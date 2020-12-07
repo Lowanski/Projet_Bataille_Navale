@@ -84,7 +84,12 @@ public class Grille implements Serializable {
             System.out.print(cons[i] + "|");
             for (int j = 0; j < 15; j++) {
                 if (tableau[j][i] != null) {
-                    System.out.print(" " + tableau[j][i].getId() + "  ");
+                    int temp = casetouche(tableau[j][i], i, j);
+                    if (temp == 1) {
+                        System.out.print(" X  ");
+                    } else {
+                        System.out.print(" " + tableau[j][i].getId() + "  ");
+                    }
                 } else {
                     System.out.print("--- ");
                 }
