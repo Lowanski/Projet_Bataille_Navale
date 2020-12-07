@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+import com.ece.Navire.SaisieErroneeException;
+
 public class Grille implements Serializable {
 
     Navire[][] tableau = new Navire[15][15];
@@ -84,7 +86,12 @@ public class Grille implements Serializable {
             System.out.print(cons[i] + "|");
             for (int j = 0; j < 15; j++) {
                 if (tableau[j][i] != null) {
-                    System.out.print(" " + tableau[j][i].getId() + "  ");
+                    int temp = casetouche(tableau[j][i], i, j);
+                    if (temp == 1) {
+                        System.out.print(" X  ");
+                    } else {
+                        System.out.print(" " + tableau[j][i].getId() + "  ");
+                    }
                 } else {
                     System.out.print("--- ");
                 }
@@ -105,7 +112,12 @@ public class Grille implements Serializable {
                     int temp = casetouche(tableau[j][i], i, j);
                     if (temp == 1) {
                         System.out.print("000 ");
-                    } else {
+                    }
+                    else if(temp == 2){
+                        System.out.print(" " + tableau[j][i].getId() + "  ");
+                    }
+                    else
+                    {
                         System.out.print("--- ");
                     }
                 } else {
@@ -116,7 +128,6 @@ public class Grille implements Serializable {
         }
         System.out.println("=================================================================");
     }
-
 
     public void setPositionRandom(Navire n) {
         Random rand = new Random();
@@ -200,10 +211,21 @@ public class Grille implements Serializable {
         }
     }
 
-    public Navire getNavire() {
+    public static void controleNavire(String choix) throws SaisieErroneeException {
+        if ((!choix.equals("1"))&&(!choix.equals("2"))&&(!choix.equals("3"))&&(!choix.equals("4"))
+        &&(!choix.equals("5"))&&(!choix.equals("6"))&&(!choix.equals("7"))&&(!choix.equals("8"))
+        &&(!choix.equals("9"))&&(!choix.equals("10"))) {
+            throw new SaisieErroneeException(
+                    "Vous n'avez pas choisie un Navire valide, ressaisir: ");
+        }
+    }
+
+    public Navire getNavire(){
 
         System.out.println("choississez un navire: ");
-        int choix;
+        int nombre;
+        String choix;
+        boolean correct=false;
 
         for (int i = 0; i < Navires.size(); i++) {
             System.out.println(i + 1 + ". " + Navires.get(i));
@@ -211,20 +233,24 @@ public class Grille implements Serializable {
 
         Scanner scan = new Scanner(System.in);
         do {
-            choix = scan.nextInt();
-            if ((choix < 1) || (choix > 10)) {
-                System.out.println("le nombre n'est pas valide, ressaissir: ");
+            choix = scan.nextLine();
+            try {
+                controleNavire(choix);
+                correct=true;
+            } catch (SaisieErroneeException e) {
+                System.out.println(e);
             }
-        } while ((choix < 1) || (choix > 10));
-
-        return Navires.get(choix - 1);
+        } while (!correct);
+        
+        nombre=Integer.parseInt(choix);
+        return Navires.get(nombre-1);
     }
 
-    public Navire getNavireIA() {
-        int choix;
-        Random rand = new Random();
-        choix = rand.nextInt(11);
-        return Navires.get(choix - 1);
+    public static void controleDestroyer(String choix) throws SaisieErroneeException {
+        if ((!choix.equals("y"))&&(!choix.equals("n"))) {
+            throw new SaisieErroneeException(
+                    "Vous n'avez pas entrer y ou n, ressaisir: ");
+        }
     }
 
     public void checkDestroyer(Destroyer tireur) {
@@ -235,14 +261,22 @@ public class Grille implements Serializable {
             boolean ok = false;
             do {
                 System.out.println("Il vous reste 1 fusee eclairante avec ce Destroyer, voulez-vous l'utiliser ? (y/n)");
-                choix = sc.nextLine();
-                if ((choix.equals("y")) || (choix.equals("n")) || (choix.equals("yes")) || (choix.equals("no"))) {
-                    ok = true;
-                    if ((choix.equals("y")) || (choix.equals("yes"))) {
+                choix=sc.nextLine();
+                try {
+                    controleDestroyer(choix);
+                    ok=true;
+                    if(choix.equals("y")){
                         tireur.setFusee(false);
+                        tireur.setPuissanceTire(16);
+                        System.out.println("tirreur :"+tireur.getFusee());
                     }
+                } catch (SaisieErroneeException e) {
+                    System.out.println(e);
                 }
             } while (!ok);
+        }
+        else{
+            tireur.setPuissanceTire(1);
         }
     }
 
@@ -252,8 +286,6 @@ public class Grille implements Serializable {
         if (getTableau()[x][y] != null) {
             getTableau()[x][y].impactTire(p, tireur);
         }
-
-
     }
 
     public boolean checkTirePossible(Point p, Navire tireur) {
@@ -282,15 +314,7 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-                /*checkNavire(p.x, p.y-1,tireur);
-                checkNavire(p.x, p.y,tireur);
-                checkNavire(p.x, p.y+1,tireur);
-
-                checkNavire(p.x+1, p.y-1,tireur);
-                checkNavire(p.x+1, p.y,tireur);
-                checkNavire(p.x+1, p.y+1,tireur);
-                */
-                possible = true;
+                possible=true;
             }
 
             if ((p.x == 14) && ((p.y != 0) && (p.y != 14))) {
@@ -300,16 +324,7 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-                /*
-                checkNavire(p.x, p.y-1,tireur);
-                checkNavire(p.x, p.y,tireur);
-                checkNavire(p.x, p.y+1,tireur);
-
-                checkNavire(p.x-1, p.y-1,tireur);
-                checkNavire(p.x-1, p.y,tireur);
-                checkNavire(p.x-1, p.y+1,tireur);
-                */
-                possible = true;
+                possible=true;
             }
 
             if ((p.y == 0) && ((p.x != 0) && (p.x != 14))) {
@@ -319,16 +334,7 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-                /*
-                checkNavire(p.x-1, p.y,tireur);
-                checkNavire(p.x, p.y,tireur);
-                checkNavire(p.x+1, p.y,tireur);
-
-                checkNavire(p.x-1, p.y+1,tireur);
-                checkNavire(p.x, p.y+1,tireur);
-                checkNavire(p.x+1, p.y+1,tireur);
-                */
-                possible = true;
+                possible=true;
             }
             if ((p.y == 14) && ((p.x != 0) && (p.x != 14))) {
 
@@ -337,16 +343,7 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-                /*
-                checkNavire(p.x-1, p.y,tireur);
-                checkNavire(p.x, p.y,tireur);
-                checkNavire(p.x+1, p.y,tireur);
-
-                checkNavire(p.x-1, p.y-1,tireur);
-                checkNavire(p.x, p.y-1,tireur);
-                checkNavire(p.x+1, p.y-1,tireur);
-                */
-                possible = true;
+                possible=true;
             }
 
             if ((p.x == 0) && (p.y == 0)) {
@@ -389,12 +386,12 @@ public class Grille implements Serializable {
         return possible;
     }
 
-
-    public void rechercheNavire(Navire tireur) {
+    public void rechercheNavire(Navire tireur){
 
         if (tireur.getId() == 3) {
             checkDestroyer((Destroyer) tireur);
         }
+        System.out.println("vous avez une puissance de tir de "+tireur.getPuissanceTire()+" visez bien");
 
         Point p = tireur.saisirTir();
 
@@ -407,15 +404,17 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-            } else if (tireur.getPuissanceTire() == 4) {
-                checkNavire(p.x, p.y, tireur);
-                checkNavire(p.x + 1, p.y, tireur);
-                checkNavire(p.x, p.y + 1, tireur);
-                checkNavire(p.x + 1, p.y + 1, tireur);
-            } else if (tireur.getPuissanceTire() == 16) {
-                for (int i = p.x; i < p.x + 3; i++) {
-                    for (int j = p.y; i < p.y + 3; i++) {
-                        checkNavire(i, j, tireur);
+            }
+            else if(tireur.getPuissanceTire()==4){
+                checkNavire(p.x, p.y,tireur);
+                checkNavire(p.x+1, p.y,tireur);
+                checkNavire(p.x, p.y+1,tireur);
+                checkNavire(p.x+1, p.y+1, tireur);
+            }
+            else if(tireur.getPuissanceTire()==16){
+                for(int i=p.x; i<p.x+4; i++){
+                    for(int j=p.y; j<p.y+4; j++){
+                        checkNavire(i, j,tireur);
                     }
                 }
             } else {
@@ -429,11 +428,21 @@ public class Grille implements Serializable {
         if (n.getOrientation() == "verticale") {
             if ((tempo[i - n.getCoord().y]) == 1) {
                 return 1;
-            } else return 0;
-        } else {
-            if ((tempo[j - n.getCoord().x]) == 1) {
+            }
+            else if((tempo[i-n.getCoord().y])==2){
+                return 2;
+            }
+            else return 0;
+        }
+        else {
+            if((tempo[j-n.getCoord().x])==1)
+            {
                 return 1;
-            } else {
+            }
+            else if((tempo[j-n.getCoord().x])==2){
+                return 2;
+            }
+            else {
                 return 0;
             }
         }
