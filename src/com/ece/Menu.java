@@ -1,5 +1,6 @@
 package com.ece;
 
+import javax.crypto.CipherInputStream;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -81,11 +82,18 @@ public class Menu {
     private static void chargerPartieSerial() {
         Joueur joueur1 = null;
         Joueur joueur2 = null;
+        ObjectInputStream ois;
+        FileInputStream fis;
 
         try {
-            // ouverture d'un flux d'entrée depuis le fichier "personne.serial"
-            FileInputStream fis = new FileInputStream("Save/partieSave.serial"); // création d'un "flux objet" avec le flux fichier
-            ObjectInputStream ois = new ObjectInputStream(fis);
+            File fileTst = new File("Save/partieSave.serial");
+            if (fileTst.exists()){
+                // ouverture d'un flux d'entrée depuis le fichier "Save/partieSave.serial"
+                fis = new FileInputStream("Save/partieSave.serial"); // création d'un "flux objet" avec le flux fichier
+                ois = new ObjectInputStream(fis);
+            }else return;
+
+
             try {
                 // désérialisation : lecture de l'objet depuis le flux d'entrée
                 joueur1 = (Joueur) ois.readObject();
@@ -98,11 +106,10 @@ public class Menu {
                     fis.close();
                 }
             }
-        } catch (IOException ioe) {
+        } catch (IOException | ClassNotFoundException ioe) {
             ioe.printStackTrace();
-        } catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
         }
+
         if (joueur1 != null) {
             System.out.println(joueur1 + " a ete deserialise");
         }
@@ -169,6 +176,7 @@ public class Menu {
             ######### CODE IA TIRE OU MOUV #######
 
             ######### CODE ETAT DE VICTOIRE #######
+
              */
 
         } while (etatPartie != 0 && etatPartie != -1);
@@ -200,7 +208,7 @@ public class Menu {
                 boolean ok;
                 if (joueur1.useAction()) {
                     do {
-                        ok = joueur2.getJGrille().getNavire().canMove(joueur2.getJGrille());
+                        ok = joueur1.getJGrille().getNavire().canMove(joueur1.getJGrille());
                     } while (!ok);
                 }
                 joueur1.useAction();
@@ -432,7 +440,7 @@ public class Menu {
         int nbCaseCasseInt = Integer.parseInt(nbCaseCasse);
         int[] temp = new int[listTemporaire.get(0).getTaille()];
 
-        if (fin == false) {
+        if (!fin) {
             for (int i = 0; i < nbCaseCasseInt - 1; i++) {
                 pos = ligne.indexOf(' ', pos2 + 1);
                 String caseCasse = ligne.substring(pos2 + 1, pos);
