@@ -62,6 +62,10 @@ public class Grille implements Serializable {
         }
     }
 
+    public ArrayList<Navire> gettouslesNavires(){
+        return Navires;
+    }
+
     public void setListCroiseur(ArrayList<Croiseur> c) {
         listCroiseur = c;
     }

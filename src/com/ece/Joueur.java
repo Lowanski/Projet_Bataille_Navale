@@ -37,4 +37,14 @@ public class Joueur implements Serializable {
             return false;
         }
     }
+
+    public boolean checkEtatJoueur(){
+        for(Object i:  this.getJGrille().gettouslesNavires()){
+            Navire n=(Navire)i;
+            if(n.getAlive()){
+               return true;
+            }
+        }
+        return false;
+    }
 }
