@@ -4,10 +4,17 @@ import Controleur.ece.*;
 import com.ece.*;
 import com.ece.Menu;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Accueil extends JFrame {
 
@@ -16,7 +23,7 @@ public class Accueil extends JFrame {
     private JTextArea txt = new JTextArea("Zone de Texte");
 
     public  Accueil() {
-        JFrame accueil = new JFrame("Bataille Navale");
+
         setTitle("Bataille Navale");
         setSize(1500, 800);
         setResizable(false);
@@ -25,6 +32,7 @@ public class Accueil extends JFrame {
         jouer.setBounds(new Rectangle(100,150,80,50));
         conteneur.add(txt);
         conteneur.add(jouer);
+
         setContentPane(conteneur);
         jouer.addActionListener(new ActionListener() {
             @Override
@@ -33,5 +41,4 @@ public class Accueil extends JFrame {
             }
         });
     }
-
 }
