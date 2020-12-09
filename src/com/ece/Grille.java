@@ -290,18 +290,22 @@ public class Grille implements Serializable {
         }
     }
 
-    public static void controleNavire(String choix,Navire n) throws SaisieErroneeException {
+    public static void controleNavire(String choix) throws SaisieErroneeException {
         if ((!choix.equals("1"))&&(!choix.equals("2"))&&(!choix.equals("3"))&&(!choix.equals("4"))
         &&(!choix.equals("5"))&&(!choix.equals("6"))&&(!choix.equals("7"))&&(!choix.equals("8"))
         &&(!choix.equals("9"))&&(!choix.equals("10"))) {
             throw new SaisieErroneeException(
                     "Vous n'avez pas choisie un Navire valide, ressaisir: ");
         }
+    }
+
+    public static void controleNavire2(Navire n) throws SaisieErroneeException {
         if(!n.getAlive()){
             throw new SaisieErroneeException(
                     "Le navire choisit est coulé, vous ne pouvez pas tirer avec, ressaisir");
         }
     }
+
 
     public Navire getNavire(){
 
@@ -318,8 +322,8 @@ public class Grille implements Serializable {
         do {
             choix = scan.nextLine();
             try {
-                nombre=Integer.parseInt(choix);
-                controleNavire(choix,Navires.get(nombre-1));
+                controleNavire(choix);
+                controleNavire2(Navires.get(Integer.parseInt(choix)-1));
                 correct=true;
             } catch (SaisieErroneeException e) {
                 System.out.println(e);
