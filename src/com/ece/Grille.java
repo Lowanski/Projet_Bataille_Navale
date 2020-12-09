@@ -154,54 +154,51 @@ public class Grille implements Serializable {
     }
 
     public void dessiner() {
-        System.out.println(ConsoleColors.BLACK_BOLD +"   | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |");
+        System.out.println(ConsoleColors.BLACK_BOLD + "   | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |");
         System.out.println("=================================================================" + ConsoleColors.RESET);
 
         for (int i = 0; i < 15; i++) {
-            System.out.print(ConsoleColors.BLACK_BOLD + cons[i] + "|"+ ConsoleColors.RESET);
+            System.out.print(ConsoleColors.BLACK_BOLD + cons[i] + "|" + ConsoleColors.RESET);
             for (int j = 0; j < 15; j++) {
                 if (tableau[j][i] != null) {
                     int temp = casetouche(tableau[j][i], i, j);
                     if (temp == 1) {
-                        System.out.print(ConsoleColors.RED_BOLD + " X  " +ConsoleColors.RESET);
+                        System.out.print(ConsoleColors.RED_BOLD + " X  " + ConsoleColors.RESET);
                     } else {
-                        System.out.print(" " + tableau[j][i].getId() + "  " );
+                        System.out.print(" " + tableau[j][i].getId() + "  ");
                     }
                 } else {
-                    System.out.print(ConsoleColors.BLUE_BOLD+"--- "+ConsoleColors.RESET);
+                    System.out.print(ConsoleColors.BLUE_BOLD + "--- " + ConsoleColors.RESET);
                 }
             }
-            System.out.println(ConsoleColors.BLACK_BOLD+"|");
+            System.out.println(ConsoleColors.BLACK_BOLD + "|");
         }
         System.out.println("=================================================================" + ConsoleColors.RESET);
 
     }
 
     public void dessinerenemi() {
-        System.out.println(ConsoleColors.BLACK_BOLD +"   | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |");
+        System.out.println(ConsoleColors.BLACK_BOLD + "   | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |");
         System.out.println("=================================================================");
         for (int i = 0; i < 15; i++) {
-            System.out.print(cons[i] + "|"+ConsoleColors.RESET);
+            System.out.print(cons[i] + "|" + ConsoleColors.RESET);
             for (int j = 0; j < 15; j++) {
                 if (tableau[j][i] != null) {
                     int temp = casetouche(tableau[j][i], i, j);
                     if (temp == 1) {
-                        System.out.print(ConsoleColors.RED_BOLD +"000 "+ ConsoleColors.RESET);
-                    }
-                    else if(temp == 2){
+                        System.out.print(ConsoleColors.RED_BOLD + "000 " + ConsoleColors.RESET);
+                    } else if (temp == 2) {
                         System.out.print(" " + tableau[j][i].getId() + "  ");
-                    }
-                    else
-                    {
-                        System.out.print(ConsoleColors.BLUE_BOLD+"--- "+ConsoleColors.RESET);
+                    } else {
+                        System.out.print(ConsoleColors.BLUE_BOLD + "--- " + ConsoleColors.RESET);
                     }
                 } else {
-                    System.out.print(ConsoleColors.BLUE_BOLD+"--- "+ ConsoleColors.RESET);
+                    System.out.print(ConsoleColors.BLUE_BOLD + "--- " + ConsoleColors.RESET);
                 }
             }
-            System.out.println(ConsoleColors.BLACK_BOLD+"|");
+            System.out.println(ConsoleColors.BLACK_BOLD + "|");
         }
-        System.out.println("================================================================="+ConsoleColors.RESET);
+        System.out.println("=================================================================" + ConsoleColors.RESET);
     }
 
     public void setPositionRandom(Navire n) {
@@ -286,21 +283,21 @@ public class Grille implements Serializable {
         }
     }
 
-    public static void controleNavire(String choix) throws SaisieErroneeException {
-        if ((!choix.equals("1"))&&(!choix.equals("2"))&&(!choix.equals("3"))&&(!choix.equals("4"))
-        &&(!choix.equals("5"))&&(!choix.equals("6"))&&(!choix.equals("7"))&&(!choix.equals("8"))
-        &&(!choix.equals("9"))&&(!choix.equals("10"))) {
+    public static void controleNavire(int choix) throws SaisieErroneeException {
+        if ((choix != 1) && (choix != 2) && (choix != 3) && (choix != 4)
+                && (choix != 5) && (choix != 6) && (choix != 7) && (choix != 8)
+                && (choix != 9) && (choix != 10)) {
             throw new SaisieErroneeException(
                     "Vous n'avez pas choisie un Navire valide, ressaisir: ");
         }
+
     }
 
-    public Navire getNavire(){
+    public Navire getNavire() {
 
         System.out.println("choississez un navire: ");
-        int nombre;
-        String choix;
-        boolean correct=false;
+        int choix;
+        boolean correct = false;
 
         for (int i = 0; i < Navires.size(); i++) {
             System.out.println(i + 1 + ". " + Navires.get(i));
@@ -308,21 +305,38 @@ public class Grille implements Serializable {
 
         Scanner scan = new Scanner(System.in);
         do {
-            choix = scan.nextLine();
+            choix = scan.nextInt();
             try {
                 controleNavire(choix);
-                correct=true;
+                correct = true;
             } catch (SaisieErroneeException e) {
                 System.out.println(e);
             }
         } while (!correct);
-        
-        nombre=Integer.parseInt(choix);
-        return Navires.get(nombre-1);
+        return Navires.get(choix - 1);
+    }
+
+    public Navire getNavireAlea() {
+
+        int choix;
+        boolean correct = false;
+
+        Random rand = new Random();
+        do {
+            choix = rand.nextInt(10) + 1;
+            try {
+                controleNavire(choix);
+                correct = true;
+            } catch (SaisieErroneeException e) {
+                System.out.println(e);
+            }
+        } while (!correct);
+
+        return Navires.get(choix - 1);
     }
 
     public static void controleDestroyer(String choix) throws SaisieErroneeException {
-        if ((!choix.equals("y"))&&(!choix.equals("n"))) {
+        if ((!choix.equals("y")) && (!choix.equals("n"))) {
             throw new SaisieErroneeException(
                     "Vous n'avez pas entrer y ou n, ressaisir: ");
         }
@@ -336,21 +350,33 @@ public class Grille implements Serializable {
             boolean ok = false;
             do {
                 System.out.println("Il vous reste 1 fusee eclairante avec ce Destroyer, voulez-vous l'utiliser ? (y/n)");
-                choix=sc.nextLine();
+                choix = sc.nextLine();
                 try {
                     controleDestroyer(choix);
-                    ok=true;
-                    if(choix.equals("y")){
+                    ok = true;
+                    if (choix.equals("y")) {
                         tireur.setFusee(false);
                         tireur.setPuissanceTire(16);
-                        System.out.println("tirreur :"+tireur.getFusee());
+                        System.out.println("tirreur :" + tireur.getFusee());
                     }
                 } catch (SaisieErroneeException e) {
                     System.out.println(e);
                 }
             } while (!ok);
+        } else {
+            tireur.setPuissanceTire(1);
         }
-        else{
+    }
+
+    public void checkDestroyerAlea(Destroyer tireur) {
+
+        if (tireur.getFusee()) {
+
+            tireur.setFusee(false);
+            tireur.setPuissanceTire(16);
+            System.out.println("L'IA utilise une fusée éclairante");
+
+        } else {
             tireur.setPuissanceTire(1);
         }
     }
@@ -389,7 +415,7 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-                possible=true;
+                possible = true;
             }
 
             if ((p.x == 14) && ((p.y != 0) && (p.y != 14))) {
@@ -399,7 +425,7 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-                possible=true;
+                possible = true;
             }
 
             if ((p.y == 0) && ((p.x != 0) && (p.x != 14))) {
@@ -409,7 +435,7 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-                possible=true;
+                possible = true;
             }
             if ((p.y == 14) && ((p.x != 0) && (p.x != 14))) {
 
@@ -418,7 +444,7 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-                possible=true;
+                possible = true;
             }
 
             if ((p.x == 0) && (p.y == 0)) {
@@ -461,12 +487,12 @@ public class Grille implements Serializable {
         return possible;
     }
 
-    public void rechercheNavire(Navire tireur){
+    public void rechercheNavire(Navire tireur) {
 
         if (tireur.getId() == 3) {
             checkDestroyer((Destroyer) tireur);
         }
-        System.out.println("vous avez une puissance de tir de "+tireur.getPuissanceTire()+" visez bien");
+        System.out.println("vous avez une puissance de tir de " + tireur.getPuissanceTire() + " visez bien");
 
         Point p = tireur.saisirTir();
 
@@ -479,17 +505,15 @@ public class Grille implements Serializable {
                         checkNavire(i, j, tireur);
                     }
                 }
-            }
-            else if(tireur.getPuissanceTire()==4){
-                checkNavire(p.x, p.y,tireur);
-                checkNavire(p.x+1, p.y,tireur);
-                checkNavire(p.x, p.y+1,tireur);
-                checkNavire(p.x+1, p.y+1, tireur);
-            }
-            else if(tireur.getPuissanceTire()==16){
-                for(int i=p.x; i<p.x+4; i++){
-                    for(int j=p.y; j<p.y+4; j++){
-                        checkNavire(i, j,tireur);
+            } else if (tireur.getPuissanceTire() == 4) {
+                checkNavire(p.x, p.y, tireur);
+                checkNavire(p.x + 1, p.y, tireur);
+                checkNavire(p.x, p.y + 1, tireur);
+                checkNavire(p.x + 1, p.y + 1, tireur);
+            } else if (tireur.getPuissanceTire() == 16) {
+                for (int i = p.x; i < p.x + 4; i++) {
+                    for (int j = p.y; j < p.y + 4; j++) {
+                        checkNavire(i, j, tireur);
                     }
                 }
             } else {
@@ -498,26 +522,80 @@ public class Grille implements Serializable {
         }
     }
 
+    public void rechercheNavireAlea(Navire tireur,Joueur joueur1) {
+        Point p = new Point();
+        boolean possible;
+        Random rand = new Random();
+        if (tireur.getId() == 3) {
+            checkDestroyerAlea((Destroyer) tireur);
+        }
+        System.out.println("L'IA a chosi le navire : "+tireur);
+        int x;
+        int py;
+
+        Navire[][] tabEnnemi = joueur1.getJGrille().getTableau();
+
+        x = rand.nextInt(15);
+        py = rand.nextInt(15);
+
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (tabEnnemi[j][i] != null) {  // tableau ennemi
+                    int temp = casetouche(tabEnnemi[j][i], i, j);
+                    if (temp == 1) {
+                    } else if (temp == 2) {
+                        x = j;
+                        py = i;
+                    } else {
+                    }
+                } else {
+                }
+            }
+        }
+
+        p.setLocation(x, py);
+        possible = checkTirePossible(p, tireur);
+
+        if (!possible) {
+            if (tireur.getPuissanceTire() == 9) {
+                for (int i = p.x - 1; i < p.x + 2; i++) {
+                    for (int j = p.y - 1; j < p.y + 2; j++) {
+                        checkNavire(i, j, tireur);
+                    }
+                }
+            } else if (tireur.getPuissanceTire() == 4) {
+                checkNavire(p.x, p.y, tireur);
+                checkNavire(p.x + 1, p.y, tireur);
+                checkNavire(p.x, p.y + 1, tireur);
+                checkNavire(p.x + 1, p.y + 1, tireur);
+            } else if (tireur.getPuissanceTire() == 16) {
+                for (int i = p.x; i < p.x + 4; i++) {
+                    for (int j = p.y; j < p.y + 4; j++) {
+                        checkNavire(i, j, tireur);
+                    }
+                }
+            } else {
+                checkNavire(p.x, p.y, tireur);
+            }
+        }
+
+        System.out.println("L'IA a tiré ici : "+p);
+    }
+
     public int casetouche(Navire n, int i, int j) {
         int[] tempo = n.getToucherTab();
         if (n.getOrientation() == "verticale") {
             if ((tempo[i - n.getCoord().y]) == 1) {
                 return 1;
-            }
-            else if((tempo[i-n.getCoord().y])==2){
+            } else if ((tempo[i - n.getCoord().y]) == 2) {
                 return 2;
-            }
-            else return 0;
-        }
-        else {
-            if((tempo[j-n.getCoord().x])==1)
-            {
+            } else return 0;
+        } else {
+            if ((tempo[j - n.getCoord().x]) == 1) {
                 return 1;
-            }
-            else if((tempo[j-n.getCoord().x])==2){
+            } else if ((tempo[j - n.getCoord().x]) == 2) {
                 return 2;
-            }
-            else {
+            } else {
                 return 0;
             }
         }

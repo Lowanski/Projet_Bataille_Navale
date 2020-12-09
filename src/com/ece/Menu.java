@@ -1,9 +1,9 @@
 package com.ece;
 
-import javax.crypto.CipherInputStream;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 import com.ece.Navire.SaisieErroneeException;
@@ -170,25 +170,48 @@ public class Menu {
             Il faut adapter les fonction de tire et de mouvement pour l'ordi (ne par demandé de rentrer quelque chose)
 
 
-            ######### CODE CHOIX ALEA DE L ORDI ########
+            ######### CODE CHOIX ALEA DE L ORDI ########*/
+
+            if(etatPartie == 1)
+            doActionIA(joueur2,joueur1);
+
+            /*######### CODE IA TIRE OU MOUV #######
 
 
-            ######### CODE IA TIRE OU MOUV #######
-
-            ######### CODE ETAT DE VICTOIRE #######
+            ############ CODE ETAT DE VICTOIRE #######
 
              */
 
         } while (etatPartie != 0 && etatPartie != -1);
 
-        if (etatPartie == -1) {
+        if (etatPartie == 0) {
             System.out.println("Vous avez quitté la partie, la partie a été sauvegardée");
         }
 
-        if (etatPartie == 0) {
+        if (etatPartie == -1) {
             // AFFICHAGE DU JOUEUR GAGNANT
         }
 
+    }
+
+    private static void doActionIA(Joueur joueur2, Joueur joueur1) {
+        Random rand = new Random();
+        int actionAlea = rand.nextInt(2);
+        if (actionAlea == 1){
+            Navire tireur = joueur2.getJGrille().getNavireAlea();
+            if (joueur2.useAction()) {
+                joueur2.getOGrille().rechercheNavireAlea(tireur,joueur1);
+            }
+            joueur2.useAction();
+        }else{
+            boolean ok;
+            if (joueur2.useAction()) {
+                do {
+                    ok = joueur2.getJGrille().getNavireAlea().canMove(joueur2.getJGrille(),"IA");
+                } while (!ok);
+            }
+            joueur2.useAction();
+        }
     }
 
     public static int doAction(Joueur joueur1, Joueur joueur2, int nombre) {
@@ -200,6 +223,7 @@ public class Menu {
                 if (joueur1.useAction()) {
                     joueur1.getOGrille().rechercheNavire(tireur);
                 }
+                joueur1.useAction();
                 etatPartie = 1;
                 break;
 

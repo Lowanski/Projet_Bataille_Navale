@@ -171,11 +171,95 @@ public abstract class Navire implements Serializable {
         return directionEntre;
     }
 
+    private static String saisirDirectionAlea() {
+        Random rand = new Random();
+        boolean correct = false;
+        String directionEntre = null;
+        do {
+            int directionNb = rand.nextInt(4);
+            if (directionNb == 0)
+                directionEntre = "D";
+            if (directionNb == 1)
+                directionEntre = "G";
+            if (directionNb == 2)
+                directionEntre = "H";
+            if (directionNb == 3)
+                directionEntre = "B";
+            try {
+                controle(directionEntre);
+                correct = true;
+            } catch (SaisieErroneeException e) {
+                System.out.println(e);
+            }
+        } while (!correct);
+        return directionEntre;
+    }
+
     public boolean bouger(Grille g) {
         String direction;
         boolean pass = false;
         do {
             direction = saisirDirection();
+            direction = direction.toUpperCase();
+            switch (direction) {
+                case "D": {
+                    boolean yes = canGoRight(g);
+                    if (yes) {
+                        goRight(g);
+                        pass = true;
+                    } else {
+                        System.out.println("vous ne pouvez pas aller a droite");
+                    }
+                    break;
+                }
+
+                case "G": {
+                    boolean yes = canGoLeft(g);
+                    if (yes) {
+                        goLeft(g);
+                        pass = true;
+                    } else {
+                        System.out.println("vous ne pouvez pas aller a gauche");
+                    }
+                    break;
+                }
+
+                case "H": {
+                    boolean yes = canGoUp(g);
+                    if (yes) {
+                        goUp(g);
+                        pass = true;
+                    } else {
+                        System.out.println("vous ne pouvez pas monter");
+                    }
+                    break;
+                }
+
+                case "B": {
+                    boolean yes = canGoDown(g);
+                    if (yes) {
+                        goDown(g);
+                        pass = true;
+                    } else {
+                        System.out.println("vous ne pouvez pas descendre");
+                    }
+                    break;
+                }
+                case "X": {
+                    return false;
+                }
+            }
+        } while (!pass);
+        g.getTableau()[coord.x][coord.y] = this;
+        System.out.println("Deplacement de " + this + " sur " + coord);
+        return true;
+    }
+
+    public boolean bouger(Grille g,String ia) {
+        String direction;
+        boolean pass = false;
+        do {
+            direction = saisirDirectionAlea();
             direction = direction.toUpperCase();
             switch (direction) {
                 case "D": {
@@ -247,6 +331,21 @@ public abstract class Navire implements Serializable {
 
     }
 
+    public boolean canMove(Grille g,String ia) {
+        int touch = 0;
+        for (Object i : toucherTab) {
+            if ((int) i != 0) {
+                touch++;
+            }
+        }
+        if (touch != 0) {
+            return false;
+        } else {
+            return bouger(g,ia);
+        }
+
+    }
+
     public Point tirer(Point p) {
         return p;
     }
@@ -300,6 +399,7 @@ public abstract class Navire implements Serializable {
         } while (!correct);
 
         tir.x = Character.getNumericValue(x) - 10;
+        System.out.println("Les caractères :"+tir.x + x);
         tir.y = convert;
 
         System.out.println(tir);
