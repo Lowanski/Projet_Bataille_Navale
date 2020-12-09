@@ -20,12 +20,5 @@ public class Destroyer extends Navire implements Serializable {
 
     public void setFusee(boolean fusee){
         fuse=fusee;
-    }
-
-    @Override
-    public int getPuissanceTire(){
-            return puissanceTire;
-    }
-
-    
+    }    
 }

@@ -14,6 +14,7 @@ public abstract class Navire implements Serializable {
     protected int puissanceTire;
     protected int id;
     protected int[] toucherTab;
+    protected boolean alive;
 
     Navire() {
         Random rand = new Random();
@@ -24,6 +25,16 @@ public abstract class Navire implements Serializable {
 
         else
             orientation = "horizontale";
+        
+        alive=true;
+    }
+
+    public boolean getAlive(){
+        return alive;
+    }
+
+    public void setAlive(boolean a){
+        alive=a;
     }
 
     public void setToucherTab(int[] toucherTab) {
@@ -328,7 +339,6 @@ public abstract class Navire implements Serializable {
         } else {
             return bouger(g);
         }
-
     }
 
     public boolean canMove(Grille g,String ia) {
@@ -350,22 +360,18 @@ public abstract class Navire implements Serializable {
         return p;
     }
 
-    public static void controleTire(String caseSelected) throws SaisieErroneeException,Exception {
+    public static void controleTire(String caseSelected) throws SaisieErroneeException {
         int convert;
         char x;
         String y;
 
-        caseSelected = caseSelected.toLowerCase();
         x = caseSelected.charAt(0);
         y = caseSelected.substring(1);
-        try{
-            convert = Integer.parseInt(y);
-        }catch (Exception e){
-            throw new Exception("Vous avez rentré un mauvais type");
-        }
+        convert = Integer.parseInt(y);
 
-        if (((x < 'a') || (x > 'o')) || ((convert >= 15) || (convert < 0)))
-            throw new SaisieErroneeException("Vous avez rentré une case en dehors des bornes");
+        if (((x < 'a') && (x > 'o')) && ((convert <= 15) && (convert >= 0)))
+            throw new SaisieErroneeException("Vous n'avez pas rentrer une case de type : B4 ");
+
     }
 
     public Point saisirTir() {
@@ -383,6 +389,7 @@ public abstract class Navire implements Serializable {
             System.out.println("choisissez des coordonnées de tire: ex(B12)");
             chaine = scan.nextLine();
 
+            /// FAIRE UN TRY CATCH POUR GERER les mauvaises entrées @LOWAN -----------------------------------------
             try {
                 controleTire(chaine);
                 x = chaine.charAt(0);
@@ -390,8 +397,6 @@ public abstract class Navire implements Serializable {
                 convert = Integer.parseInt(y);
                 correct = true;
             } catch (SaisieErroneeException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -434,20 +439,21 @@ public abstract class Navire implements Serializable {
                 if((int)i!=0){nb++;}
             }                                           
             if(nb==taille){
-                 this.setId(0);
-                 System.out.println(this+" a ete coulee");
+                this.setId(0);
+                System.out.println(this+" a ete coulee");
+                alive=false;
             }
 
         }
         else{   // si c'est une fusee eclairante
-
-            if(getOrientation()=="verticale"){
-                toucherTab[impact.y-coord.y]=2;
+            if(this.getId()!=4){  
+                if(getOrientation()=="verticale"){
+                    toucherTab[impact.y-coord.y]=2;
+                }
+                else{
+                    toucherTab[impact.x-coord.x]=2;
+                }
             }
-            else{
-                toucherTab[impact.x-coord.x]=2;
-            }
-            
         }
     }
 }

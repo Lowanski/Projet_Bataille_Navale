@@ -137,6 +137,10 @@ public class Grille implements Serializable {
         }
     }
 
+    public ArrayList<Navire> gettouslesNavires(){
+        return Navires;
+    }
+
     public void setListCroiseur(ArrayList<Croiseur> c) {
         listCroiseur = c;
     }
@@ -293,7 +297,15 @@ public class Grille implements Serializable {
 
     }
 
-    public Navire getNavire() {
+    public static void controleNavire2(Navire n) throws SaisieErroneeException {
+        if(!n.getAlive()){
+            throw new SaisieErroneeException(
+                    "Le navire choisit est coulé, vous ne pouvez pas tirer avec, ressaisir");
+        }
+    }
+
+
+    public Navire getNavire(){
 
         System.out.println("choississez un navire: ");
         int choix;
@@ -308,6 +320,8 @@ public class Grille implements Serializable {
             choix = scan.nextInt();
             try {
                 controleNavire(choix);
+                controleNavire2(Navires.get(choix-1));
+                correct=true;
                 correct = true;
             } catch (SaisieErroneeException e) {
                 System.out.println(e);
@@ -326,7 +340,8 @@ public class Grille implements Serializable {
             choix = rand.nextInt(10) + 1;
             try {
                 controleNavire(choix);
-                correct = true;
+                controleNavire2(Navires.get(choix-1));
+                correct=true;
             } catch (SaisieErroneeException e) {
                 System.out.println(e);
             }

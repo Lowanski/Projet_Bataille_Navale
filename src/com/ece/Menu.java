@@ -136,62 +136,73 @@ public class Menu {
             boolean correct=false;
             joueur1.setActionDebutTour(); // initialise le nb d'action
             joueur2.setActionDebutTour();
-            do {
-                joueur1.getJGrille().dessiner();
-                joueur1.getOGrille().dessiner();
-                joueur1.getOGrille().dessinerenemi();
 
-                System.out.println("1. Tirer");
-                System.out.println("2. Déplacer");
-                System.out.println("3. Sauvegarder et Quitter");
 
-                System.out.println("\nSaissir une action:");
-                Scanner scan = new Scanner(System.in);
+            if(joueur1.checkEtatJoueur()){  //si le joueur 1 n'est pas mort
+
                 do {
-                    choix = scan.nextLine(); 
-                    try {
-                        controleAction(choix);
-                        correct=true;
-                    } catch (SaisieErroneeException e){
-                        System.out.println(e);
-                    }                                           
-                } while (!correct);
+                    joueur1.getJGrille().dessiner();
+                    joueur1.getOGrille().dessiner();
+                    joueur1.getOGrille().dessinerenemi();
 
-                nombre= Integer.parseInt(choix);
+                    System.out.println("1. Tirer");
+                    System.out.println("2. Déplacer");
+                    System.out.println("3. Sauvegarder et Quitter");
 
-                etatPartie = doAction(joueur1, joueur2, nombre);
+                    System.out.println("\nSaissir une action:");
+                    Scanner scan = new Scanner(System.in);
+                    do {
+                        choix = scan.nextLine();
+                        try {
+                            controleAction(choix);
+                            correct=true;
+                        } catch (SaisieErroneeException e){
+                            System.out.println(e);
+                        }
+                    } while (!correct);
 
-            } while (nombre != 3 && joueur1.getAction() != 0);
+                    nombre= Integer.parseInt(choix);
 
+                    etatPartie = doAction(joueur1, joueur2, nombre);
 
-            System.out.println("##### L'IA JOUE #####");
-            /*
-            Faire la partie où l'ordi fait aléatoirement quelque chose.
-            Il faut adapter les fonction de tire et de mouvement pour l'ordi (ne par demandé de rentrer quelque chose)
-
-
-            ######### CODE CHOIX ALEA DE L ORDI ########*/
-
-            if(etatPartie == 1)
-            doActionIA(joueur2,joueur1);
-
-            /*######### CODE IA TIRE OU MOUV #######
+                } while (nombre != 3 && joueur1.getAction() != 0);
 
 
-            ############ CODE ETAT DE VICTOIRE #######
+                if(joueur2.checkEtatJoueur()){  // si l'IA peut jouer
 
-             */
+
+                    System.out.println("##### L'IA JOUE #####");
+                    if(etatPartie == 1)
+                        doActionIA(joueur2,joueur1);
+/*
+                    Faire la partie où l'ordi fait aléatoirement quelque chose.
+                    Il faut adapter les fonction de tire et de mouvement pour l'ordi (ne par demandé de rentrer quelque chose)
+
+
+                    ######### CODE CHOIX ALEA DE L ORDI ########
+
+
+                    ######### CODE IA TIRE OU MOUV #######
+
+                    ######### CODE ETAT DE VICTOIRE #######
+
+                    */
+                }
+                else{
+                    System.out.println("VICTOIRE DU JOUEUR 1");
+                    etatPartie=-1;
+                }
+            }
+            else{
+                System.out.println("VICTOIRE DE l'IA");
+                etatPartie=-1;
+            }
 
         } while (etatPartie != 0 && etatPartie != -1);
 
         if (etatPartie == 0) {
             System.out.println("Vous avez quitté la partie, la partie a été sauvegardée");
         }
-
-        if (etatPartie == -1) {
-            // AFFICHAGE DU JOUEUR GAGNANT
-        }
-
     }
 
     private static void doActionIA(Joueur joueur2, Joueur joueur1) {
