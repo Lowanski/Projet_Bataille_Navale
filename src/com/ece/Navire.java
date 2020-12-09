@@ -360,16 +360,20 @@ public abstract class Navire implements Serializable {
         return p;
     }
 
-    public static void controleTire(String caseSelected) throws SaisieErroneeException {
+    public static void controleTire(String caseSelected) throws SaisieErroneeException,Exception {
         int convert;
         char x;
         String y;
 
+        caseSelected = caseSelected.toLowerCase();
         x = caseSelected.charAt(0);
         y = caseSelected.substring(1);
-        convert = Integer.parseInt(y);
-
-        if (((x < 'a') && (x > 'o')) && ((convert <= 15) && (convert >= 0)))
+        try{
+            convert = Integer.parseInt(y);
+        }catch (Exception e){
+            throw new Exception("Vous avez rentré un mauvais type");
+        }
+        if (((x < 'a') || (x > 'o')) || ((convert >= 15) || (convert <= 0)))
             throw new SaisieErroneeException("Vous n'avez pas rentrer une case de type : B4 ");
 
     }
@@ -389,7 +393,6 @@ public abstract class Navire implements Serializable {
             System.out.println("choisissez des coordonnées de tire: ex(B12)");
             chaine = scan.nextLine();
 
-            /// FAIRE UN TRY CATCH POUR GERER les mauvaises entrées @LOWAN -----------------------------------------
             try {
                 controleTire(chaine);
                 x = chaine.charAt(0);
@@ -398,7 +401,9 @@ public abstract class Navire implements Serializable {
                 correct = true;
             } catch (SaisieErroneeException e) {
                 e.printStackTrace();
-            }
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         } while (!correct);
