@@ -128,16 +128,6 @@ public class Menu {
         }
     }
 
-   /* public void checkEtatPartie(Joueur joueur1){
-        for(Object i:  joueur1.getJGrille().gettouslesNavires()){
-            Navire n=(Navire)i;
-            if(n.getAlive()){
-               // return false;
-            }
-        }
-        
-    }*/
-
     public static void play(Joueur joueur1, Joueur joueur2) {
         int etatPartie = 0; // Etat partie 1 = le joueur a joué | 0 = le jouer quitte la partie | -1 = un joueur a gagné la partie
         int nombre;
@@ -180,7 +170,6 @@ public class Menu {
 
                 if(joueur2.checkEtatJoueur()){  // si l'IA peut jouer
                         
-                    //l'IA PEUT JOUER
 
                     System.out.println("##### L'IA JOUE #####");
                     /*
@@ -212,7 +201,6 @@ public class Menu {
         if (etatPartie == 0) {
             System.out.println("Vous avez quitté la partie, la partie a été sauvegardée");
         }
-
     }
 
     public static int doAction(Joueur joueur1, Joueur joueur2, int nombre) {
