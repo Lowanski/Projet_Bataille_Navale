@@ -17,36 +17,47 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class Accueil extends JFrame {
+public class Accueil extends JPanel {
 
-    String nom_fichier_image = "5f783227f8cd9de65e3f11b4b1b7576e.jpg";
+    private File nom_fichier_image = new File("./image/navirefond.jpg");
     private JButton jouer = new JButton("Jouer");
     private JButton aide = new JButton("Aide");
     private JButton quitter = new JButton("Quitter");
     private JPanel conteneur = new JPanel();
-
-    private JTextArea txt = new JTextArea("Zone de Texte");
+    private JLabel titre = new JLabel("Bataille Navale");
 
     public  Accueil() {
+        ImageIcon icon = null;
+        try {
+            icon = new ImageIcon(ImageIO.read(nom_fichier_image));
+        } catch (IOException e) {
+            // pb de chargement de l'image
+            e.printStackTrace();
+        }
+        JLabel contentPane = new JLabel(icon) {
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if(getIcon() != null)
+                    g.drawImage(
+                            ((ImageIcon)getIcon()).getImage(), 0, 0,
+                            getWidth(), getHeight(), null);
+            }
+        };
+        contentPane.setLayout(new FlowLayout(FlowLayout.CENTER));
+        contentPane.setSize(500,500);
+        contentPane.add(jouer);
+        contentPane.add(aide);
+        contentPane.add(quitter);
+        //contentPane.setVisible(true);
+        add(contentPane);
+        //setVisible(true);
 
-        setBounds(0, 0, 1500, 800);
-        setTitle("Bataille Navale");
-        setSize(1500, 800);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        conteneur.setLayout(null);
-        jouer.setBounds(new Rectangle(100,150,80,50));
-        aide.setBounds(new Rectangle(100,210,80,50));
-        quitter.setBounds(new Rectangle(100,270,80,50));
-        conteneur.add(txt);
-        conteneur.add(aide);
-        conteneur.add(quitter);
-        conteneur.add(jouer);
 
-        setContentPane(conteneur);
         jouer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 ControllerPartie.jouer();
             }
         });

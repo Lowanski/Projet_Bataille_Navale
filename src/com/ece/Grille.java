@@ -19,7 +19,7 @@ public class Grille implements Serializable {
     ArrayList<Pair<Navire,Point>> listCaseATirer = new ArrayList<>();
     String[] cons = {" 0 ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 ", "10 ", "11 ", "12 ", "13 ", "14 "};
 
-    Grille() {
+    public Grille() {
         cuirasse = new Cuirasse();
         setPositionRandom(cuirasse);
         Navires.add(cuirasse);
