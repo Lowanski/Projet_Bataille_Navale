@@ -81,6 +81,7 @@ public class Menu {
         play(joueur1, joueur2);
     }
 
+
     private static void chargerPartieSerial() {
         Joueur joueur1 = null;
         Joueur joueur2 = null;
@@ -148,6 +149,7 @@ public class Menu {
                     joueur1.getJGrille().dessiner();
                     joueur1.getOGrille().dessiner();
                     joueur1.getOGrille().dessinerenemi();
+                    Score(joueur1,joueur2);
 
                     System.out.println("1. Tirer");
                     System.out.println("2. Déplacer");
@@ -495,6 +497,14 @@ public class Menu {
 
     public static void ouvrirAide(){
 
+    }
+
+    public static void Score(Joueur j1, Joueur j2){
+
+        float Scoreplayer1= j1.ScoreJoueur();
+        float Scoreplayer2= j2.ScoreJoueur();
+
+        System.out.println("Score de partie: "+ Scoreplayer2 +" / "+ Scoreplayer1);
     }
 
 }
