@@ -2,17 +2,13 @@ package Controleur.ece;
 
 import com.ece.*;
 import com.ece.Menu;
-import javafx.scene.Node;
-import javafx.util.Pair;
+import com.sun.tools.javac.util.Pair;
 import vue.Accueil;
 import vue.JButtonmod;
 import vue.Jeu;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Scanner;
+
 
 
 public class ControllerPartie {
@@ -82,7 +78,7 @@ public class ControllerPartie {
 
         //System.out.println(a.getIntx()+","+a.getInty());
         selected = new Pair<>(a.getIntx(),  a.getInty());
-        System.out.println(selected.getKey() + "  " + selected.getValue());
+        System.out.println(selected.fst + "  " + selected.snd);
 
     }
 
