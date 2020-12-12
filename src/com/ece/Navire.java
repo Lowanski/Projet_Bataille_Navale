@@ -182,11 +182,95 @@ public abstract class Navire implements Serializable {
         return directionEntre;
     }
 
+    private static String saisirDirectionAlea() {
+        Random rand = new Random();
+        boolean correct = false;
+        String directionEntre = null;
+        do {
+            int directionNb = rand.nextInt(4);
+            if (directionNb == 0)
+                directionEntre = "D";
+            if (directionNb == 1)
+                directionEntre = "G";
+            if (directionNb == 2)
+                directionEntre = "H";
+            if (directionNb == 3)
+                directionEntre = "B";
+            try {
+                controle(directionEntre);
+                correct = true;
+            } catch (SaisieErroneeException e) {
+                System.out.println(e);
+            }
+        } while (!correct);
+        return directionEntre;
+    }
+
     public boolean bouger(Grille g) {
         String direction;
         boolean pass = false;
         do {
             direction = saisirDirection();
+            direction = direction.toUpperCase();
+            switch (direction) {
+                case "D": {
+                    boolean yes = canGoRight(g);
+                    if (yes) {
+                        goRight(g);
+                        pass = true;
+                    } else {
+                        System.out.println("vous ne pouvez pas aller a droite");
+                    }
+                    break;
+                }
+
+                case "G": {
+                    boolean yes = canGoLeft(g);
+                    if (yes) {
+                        goLeft(g);
+                        pass = true;
+                    } else {
+                        System.out.println("vous ne pouvez pas aller a gauche");
+                    }
+                    break;
+                }
+
+                case "H": {
+                    boolean yes = canGoUp(g);
+                    if (yes) {
+                        goUp(g);
+                        pass = true;
+                    } else {
+                        System.out.println("vous ne pouvez pas monter");
+                    }
+                    break;
+                }
+
+                case "B": {
+                    boolean yes = canGoDown(g);
+                    if (yes) {
+                        goDown(g);
+                        pass = true;
+                    } else {
+                        System.out.println("vous ne pouvez pas descendre");
+                    }
+                    break;
+                }
+                case "X": {
+                    return false;
+                }
+            }
+        } while (!pass);
+        g.getTableau()[coord.x][coord.y] = this;
+        System.out.println("Deplacement de " + this + " sur " + coord);
+        return true;
+    }
+
+    public boolean bouger(Grille g,String ia) {
+        String direction;
+        boolean pass = false;
+        do {
+            direction = saisirDirectionAlea();
             direction = direction.toUpperCase();
             switch (direction) {
                 case "D": {
@@ -257,20 +341,39 @@ public abstract class Navire implements Serializable {
         }
     }
 
+    public boolean canMove(Grille g,String ia) {
+        int touch = 0;
+        for (Object i : toucherTab) {
+            if ((int) i != 0) {
+                touch++;
+            }
+        }
+        if (touch != 0) {
+            return false;
+        } else {
+            return bouger(g,ia);
+        }
+
+    }
+
     public Point tirer(Point p) {
         return p;
     }
 
-    public static void controleTire(String caseSelected) throws SaisieErroneeException {
+    public static void controleTire(String caseSelected) throws SaisieErroneeException,Exception {
         int convert;
         char x;
         String y;
 
+        caseSelected = caseSelected.toLowerCase();
         x = caseSelected.charAt(0);
         y = caseSelected.substring(1);
-        convert = Integer.parseInt(y);
-
-        if (((x < 'a') && (x > 'o')) && ((convert <= 15) && (convert >= 0)))
+        try{
+            convert = Integer.parseInt(y);
+        }catch (Exception e){
+            throw new Exception("Vous avez rentré un mauvais type");
+        }
+        if (((x < 'a') || (x > 'o')) || ((convert >= 15) || (convert < 0)))
             throw new SaisieErroneeException("Vous n'avez pas rentrer une case de type : B4 ");
 
     }
@@ -290,7 +393,6 @@ public abstract class Navire implements Serializable {
             System.out.println("choisissez des coordonnées de tire: ex(B12)");
             chaine = scan.nextLine();
 
-            /// FAIRE UN TRY CATCH POUR GERER les mauvaises entrées @LOWAN -----------------------------------------
             try {
                 controleTire(chaine);
                 x = chaine.charAt(0);
@@ -299,19 +401,22 @@ public abstract class Navire implements Serializable {
                 correct = true;
             } catch (SaisieErroneeException e) {
                 e.printStackTrace();
-            }
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         } while (!correct);
 
         tir.x = Character.getNumericValue(x) - 10;
+        System.out.println("Les caractères :"+tir.x + x);
         tir.y = convert;
 
         System.out.println(tir);
         return tirer(tir);
     }
 
-    public void impactTire(Point impact,Navire tireur){
+    public void impactTire(Point impact,Navire tireur,Grille g){
 
         if(tireur.getPuissanceTire()!=16){  
 
@@ -324,6 +429,7 @@ public abstract class Navire implements Serializable {
                     toucherTab[impact.x-coord.x]=1;
                 }
                 System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord +"est touche au point : "+impact);
+                g.addListCaseATirer(this,impact,tireur);
             }
             else{ //si c'est un sous-marin
                 
@@ -336,11 +442,13 @@ public abstract class Navire implements Serializable {
             // on verifie si le bateau est coulee
             int nb=0;
             for(Object i: toucherTab){
-                if((int)i!=0){nb++;}
-            }                                           
+                if((int)i==1){nb++;}
+            }
+            System.out.println("Nombre de fois touché : " +nb);
             if(nb==taille){
                 this.setId(0);
                 System.out.println(this+" a ete coulee");
+                g.removeNavColeListCaseATire(this);
                 alive=false;
             }
 
@@ -355,5 +463,16 @@ public abstract class Navire implements Serializable {
                 }
             }
         }
+    }
+
+    public float ScoreNavire(){
+        int nb=0;
+        for(int i=0; i<toucherTab.length; i++) {
+            if(toucherTab[i]==1) {
+                nb++;
+                System.out.print("touché "+nb+ "fois ");
+            }
+        }
+        return nb/getTaille();
     }
 }

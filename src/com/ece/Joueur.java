@@ -13,6 +13,15 @@ public class Joueur implements Serializable {
         oGrille = oG;
     }
 
+    public float ScoreJoueur(){
+        float nb=0;
+        for(Navire i: jGrille.gettouslesNavires()){
+            nb = nb+ i.ScoreNavire();
+        }
+        System.out.println("dansjoueur:"+nb);
+        return nb*100;
+    }
+
     public Grille getJGrille(){
         return jGrille;
     }

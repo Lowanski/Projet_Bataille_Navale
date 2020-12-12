@@ -1,9 +1,9 @@
 package com.ece;
 
-import javax.crypto.CipherInputStream;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 import com.ece.Navire.SaisieErroneeException;
@@ -19,11 +19,13 @@ public class Menu {
     private static ArrayList<Croiseur> listCroiseurO = new ArrayList<Croiseur>();
     private static ArrayList<Destroyer> listDestroyerO = new ArrayList<Destroyer>();
     private static ArrayList<SousMarin> listSousmarinO = new ArrayList<SousMarin>();
+    private static Chrono chrono = new Chrono();
 
     public static void main(String[] args) {
 
         int nombre;
         String choix;
+
         Scanner scan = new Scanner(System.in);
         do {
             System.out.println("--------LA BATAILLE NAVAL--------\n");
@@ -74,16 +76,18 @@ public class Menu {
         Grille Grille2 = new Grille();
         Joueur joueur1 = new Joueur(Grille1, Grille2);
         Joueur joueur2 = new Joueur(Grille2, Grille1);
-        int nombre;
+        chrono.start();
 
         play(joueur1, joueur2);
     }
+
 
     private static void chargerPartieSerial() {
         Joueur joueur1 = null;
         Joueur joueur2 = null;
         ObjectInputStream ois;
         FileInputStream fis;
+        chrono.resume();
 
         try {
             File fileTst = new File("Save/partieSave.serial");
@@ -98,6 +102,7 @@ public class Menu {
                 // désérialisation : lecture de l'objet depuis le flux d'entrée
                 joueur1 = (Joueur) ois.readObject();
                 joueur2 = (Joueur) ois.readObject();
+                chrono = (Chrono) ois.readObject();
             } finally {
                 // on ferme les flux
                 try {
@@ -129,21 +134,22 @@ public class Menu {
     }
 
     public static void play(Joueur joueur1, Joueur joueur2) {
-        int etatPartie = 0; // Etat partie 1 = le joueur a joué | 0 = le jouer quitte la partie | -1 = un joueur a gagné la partie
+        int etatPartie; // Etat partie 1 = le joueur a joué | 0 = le jouer quitte la partie | -1 = un joueur a gagné la partie
         int nombre;
         do {
             String choix;
             boolean correct=false;
             joueur1.setActionDebutTour(); // initialise le nb d'action
             joueur2.setActionDebutTour();
-            
+
 
             if(joueur1.checkEtatJoueur()){  //si le joueur 1 n'est pas mort
-                
+
                 do {
                     joueur1.getJGrille().dessiner();
                     joueur1.getOGrille().dessiner();
                     joueur1.getOGrille().dessinerenemi();
+                    Score(joueur1,joueur2);
 
                     System.out.println("1. Tirer");
                     System.out.println("2. Déplacer");
@@ -152,13 +158,13 @@ public class Menu {
                     System.out.println("\nSaissir une action:");
                     Scanner scan = new Scanner(System.in);
                     do {
-                        choix = scan.nextLine(); 
+                        choix = scan.nextLine();
                         try {
                             controleAction(choix);
                             correct=true;
                         } catch (SaisieErroneeException e){
                             System.out.println(e);
-                        }                                           
+                        }
                     } while (!correct);
 
                     nombre= Integer.parseInt(choix);
@@ -166,33 +172,28 @@ public class Menu {
                     etatPartie = doAction(joueur1, joueur2, nombre);
 
                 } while (nombre != 3 && joueur1.getAction() != 0);
-            
+
 
                 if(joueur2.checkEtatJoueur()){  // si l'IA peut jouer
-                        
 
                     System.out.println("##### L'IA JOUE #####");
+                    if(etatPartie == 1)
+                        doActionIA(joueur2,joueur1);
                     /*
                     Faire la partie où l'ordi fait aléatoirement quelque chose.
                     Il faut adapter les fonction de tire et de mouvement pour l'ordi (ne par demandé de rentrer quelque chose)
-
-
-                    ######### CODE CHOIX ALEA DE L ORDI ########
-
-
-                    ######### CODE IA TIRE OU MOUV #######
-
-                    ######### CODE ETAT DE VICTOIRE #######
-
                     */
+
                 }
                 else{
-                    System.out.println("VICTOIRE DU JOUEUR 1");
+                    chrono.stop();
+                    System.out.println(ConsoleColors.BLUE+"\nVICTOIRE DU JOUEUR 1 EN : "+chrono.getDureeSec()+"s"+ConsoleColors.RESET);
                     etatPartie=-1;
                 }
             }
             else{
-                System.out.println("VICTOIRE DE l'IA");
+                chrono.stop();
+                System.out.println(ConsoleColors.BLUE+"\nVICTOIRE DE l'IA EN : "+chrono.getDureeSec()+"s"+ConsoleColors.RESET);
                 etatPartie=-1;
             }
 
@@ -200,6 +201,26 @@ public class Menu {
 
         if (etatPartie == 0) {
             System.out.println("Vous avez quitté la partie, la partie a été sauvegardée");
+        }
+    }
+
+    private static void doActionIA(Joueur joueur2, Joueur joueur1) {
+        Random rand = new Random();
+        int actionAlea = rand.nextInt(2);
+        if (actionAlea == 1){
+            Navire tireur = joueur2.getJGrille().getNavireAlea();
+            if (joueur2.useAction()) {
+                joueur2.getOGrille().rechercheNavireAlea(tireur,joueur1);
+            }
+            joueur2.useAction();
+        }else{
+            boolean ok;
+            if (joueur2.useAction()) {
+                do {
+                    ok = joueur2.getJGrille().getNavireAlea().canMove(joueur2.getJGrille(),"IA");
+                } while (!ok);
+            }
+            joueur2.useAction();
         }
     }
 
@@ -212,6 +233,7 @@ public class Menu {
                 if (joueur1.useAction()) {
                     joueur1.getOGrille().rechercheNavire(tireur);
                 }
+                joueur1.useAction();
                 etatPartie = 1;
                 break;
 
@@ -239,12 +261,15 @@ public class Menu {
 
     public static void sauvegarderPartie(Joueur j1, Joueur j2) {
         try {
+            chrono.pause();
             FileOutputStream fos = new FileOutputStream("Save/partieSave.serial");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             try {
                 // sérialisation : écriture de l'objet dans le flux de sortie
+
                 oos.writeObject(j1);
                 oos.writeObject(j2);
+                oos.writeObject(chrono);
                 // on vide le tampon
                 oos.flush();
                 System.out.println(j1 + " a ete serialise");
@@ -440,7 +465,7 @@ public class Menu {
         listTemporaire.get(0).setCoord(coordNav);
 
         String nbCaseCasse;
-        Boolean fin = false;
+        boolean fin = false;
         if (ligne.length() - pos <= 2) {
             nbCaseCasse = ligne.substring(pos + 1, ligne.length());
             fin = true;
@@ -472,6 +497,14 @@ public class Menu {
 
     public static void ouvrirAide(){
 
+    }
+
+    public static void Score(Joueur j1, Joueur j2){
+
+        float Scoreplayer1= j1.ScoreJoueur();
+        float Scoreplayer2= j2.ScoreJoueur();
+
+        System.out.println("Score de partie: "+ Scoreplayer2 +" / "+ Scoreplayer1);
     }
 
 }
