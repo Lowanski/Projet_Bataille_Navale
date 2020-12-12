@@ -8,7 +8,7 @@ public class Joueur implements Serializable {
     private Grille jGrille;
     private Grille oGrille;
 
-    Joueur(Grille jG, Grille oG){
+    public Joueur(Grille jG, Grille oG){
         jGrille = jG;
         oGrille = oG;
     }

@@ -19,7 +19,7 @@ public class Grille implements Serializable {
     ArrayList<Pair<Navire,Point>> listCaseATirer = new ArrayList<>();
     String[] cons = {" 0 ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 ", "10 ", "11 ", "12 ", "13 ", "14 "};
 
-    Grille() {
+    public Grille() {
         cuirasse = new Cuirasse();
         setPositionRandom(cuirasse);
         Navires.add(cuirasse);
@@ -93,9 +93,17 @@ public class Grille implements Serializable {
                 if (tableau[j][i] != null) {
                     int temp = casetouche(tableau[j][i], i, j);
                     if (temp == 1) {
+
+                        System.out.print(ConsoleColors.RED_BOLD + " X  " +ConsoleColors.RESET);
+                    }
+                    else if(temp==2)
+                    {
+                        System.out.print(ConsoleColors.YELLOW_BOLD+" " + tableau[j][i].getId() + "  "+ ConsoleColors.RESET);
+                    }
+                    else {
+                        System.out.print(" " + tableau[j][i].getId() + "  " );
+
                         System.out.print(ConsoleColors.RED_BOLD + " X  " + ConsoleColors.RESET);
-                    } else {
-                        System.out.print(" " + tableau[j][i].getId() + "  ");
                     }
                 } else {
                     System.out.print(ConsoleColors.BLUE_BOLD + "--- " + ConsoleColors.RESET);
