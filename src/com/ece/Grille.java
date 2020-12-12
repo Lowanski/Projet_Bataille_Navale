@@ -2,11 +2,10 @@ package com.ece;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 import com.ece.Navire.SaisieErroneeException;
+import com.sun.tools.javac.util.Pair;
 
 public class Grille implements Serializable {
 
@@ -91,6 +90,7 @@ public class Grille implements Serializable {
     ArrayList<Destroyer> listDestroyer = new ArrayList<Destroyer>();
     ArrayList<SousMarin> listSousmarin = new ArrayList<SousMarin>();
     ArrayList<Navire> Navires = new ArrayList<Navire>();
+    ArrayList<Pair<Navire,Point>> listCaseATirer = new ArrayList<>();
     String[] cons = {" 0 ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 ", "10 ", "11 ", "12 ", "13 ", "14 "};
 
     Grille() {
@@ -400,7 +400,7 @@ public class Grille implements Serializable {
         Point p = new Point();
         p.setLocation(x, y);
         if (getTableau()[x][y] != null) {
-            getTableau()[x][y].impactTire(p, tireur);
+            getTableau()[x][y].impactTire(p, tireur,this);
         }
     }
 
@@ -545,28 +545,43 @@ public class Grille implements Serializable {
             checkDestroyerAlea((Destroyer) tireur);
         }
         System.out.println("L'IA a chosi le navire : "+tireur);
+
+
         int x;
         int py;
 
         Navire[][] tabEnnemi = joueur1.getJGrille().getTableau();
 
+        // L'IA tire aleatoirement sur le tableau ennemi
         x = rand.nextInt(15);
         py = rand.nextInt(15);
 
+        // Si un navire ennemi est découvert par une fusée eclairante , l'IA va lui tirer dessus
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 if (tabEnnemi[j][i] != null) {  // tableau ennemi
                     int temp = casetouche(tabEnnemi[j][i], i, j);
-                    if (temp == 1) {
-                    } else if (temp == 2) {
+                    if (temp == 2) {
                         x = j;
                         py = i;
-                    } else {
                     }
-                } else {
                 }
             }
         }
+
+        if(listCaseATirer.size() != 0){
+            Pair maPair = listCaseATirer.get(0);
+            Point pList = (Point) maPair.snd;
+            x = pList.x;
+            py = pList.y;
+            listCaseATirer.remove(0);
+        }
+        // Si l'IA touche un ennemi avec un tire
+        // Création d'une liste de map (Navire,case à tirer) de case à tirer (Gauche, Haut, Droit, Bas)
+        // Si un bateau est a nouveau toucher on rajoute les instructions à la liste precédente
+        // L'instruction ne sera pas prise en compte si la case ou tirer pocède un navire detruit
+        // Si la liste est vide, on laisse l'aleatoire se charger du tire
+
 
         p.setLocation(x, py);
         possible = checkTirePossible(p, tireur);
@@ -616,5 +631,120 @@ public class Grille implements Serializable {
         }
     }
 
+    public void addListCaseATirer(Navire n,Point p,Navire tireur){
+        Pair<Navire,Point> posATirerG = null;
+        Pair<Navire,Point> posATirerH = null;
+        Pair<Navire,Point> posATirerD = null;
+        Pair<Navire,Point> posATirerB = null;
+        int puissanceTire = tireur.getPuissanceTire();
+        if (puissanceTire == 9){
+            int posxTireG = p.x - 2;
+            int posyTireG = p.y;
+            if (posxTireG<0){
+                posxTireG = 0;
+            }
+
+            int posxTireH = p.x;
+            int posyTireH = p.y - 2;
+            if (posyTireH<0){
+                posyTireH = 0;
+            }
+
+            int posxTireD = p.x + 2;
+            int posyTireD = p.y;
+            if (posxTireD>14){
+                posxTireD = 14;
+            }
+
+            int posxTireB = p.x;
+            int posyTireB = p.y+2;
+            if (posxTireB>14){
+                posxTireB = 14;
+            }
+            checkCaseATirer(posxTireG,posyTireG,posATirerG,n);
+            checkCaseATirer(posxTireH,posyTireH,posATirerH,n);
+            checkCaseATirer(posxTireD,posyTireD,posATirerD,n);
+            checkCaseATirer(posxTireB,posyTireB,posATirerB,n);
+
+        }else if (puissanceTire == 4){
+            int posxTireG = p.x - 1;
+            int posyTireG = p.y;
+            if (posxTireG<0){
+                posxTireG = 0;
+            }
+
+            int posxTireH = p.x;
+            int posyTireH = p.y - 1;
+            if (posyTireH<0){
+                posyTireH = 0;
+            }
+
+            int posxTireD = p.x + 2;
+            int posyTireD = p.y;
+            if (posxTireD>14){
+                posxTireD = 14;
+            }
+
+            int posxTireB = p.x;
+            int posyTireB = p.y+2;
+            if (posxTireB>14){
+                posxTireB = 14;
+            }
+            checkCaseATirer(posxTireG,posyTireG,posATirerG,n);
+            checkCaseATirer(posxTireH,posyTireH,posATirerH,n);
+            checkCaseATirer(posxTireD,posyTireD,posATirerD,n);
+            checkCaseATirer(posxTireB,posyTireB,posATirerB,n);
+
+        }else if (puissanceTire == 1){
+            int posxTireG = p.x - 1;
+            int posyTireG = p.y;
+            if (posxTireG<0){
+                posxTireG = 0;
+            }
+
+            int posxTireH = p.x;
+            int posyTireH = p.y - 1;
+            if (posyTireH<0){
+                posyTireH = 0;
+            }
+
+            int posxTireD = p.x + 1;
+            int posyTireD = p.y;
+            if (posxTireD>14){
+                posxTireD = 14;
+            }
+
+            int posxTireB = p.x;
+            int posyTireB = p.y+1;
+            if (posxTireB>14){
+                posxTireB = 14;
+            }
+            checkCaseATirer(posxTireG,posyTireG,posATirerG,n);
+            checkCaseATirer(posxTireH,posyTireH,posATirerH,n);
+            checkCaseATirer(posxTireD,posyTireD,posATirerD,n);
+            checkCaseATirer(posxTireB,posyTireB,posATirerB,n);
+        }else return;
+    }
+
+    private void checkCaseATirer(int posxTire, int posyTire, Pair<Navire, Point> posATirer, Navire n) {
+        if (getTableau()[posxTire][posyTire] != null) {  // tableau ennemi
+            int temp = casetouche(getTableau()[posxTire][posyTire], posyTire, posxTire);
+            if (temp == 1) {
+            }
+            else{
+                Point pTire = new Point(posxTire,posyTire);
+                posATirer = new Pair<>(n,pTire);
+                listCaseATirer.add(posATirer);
+            }
+        }
+    }
+
+    public void removeNavColeListCaseATire(Navire n){
+        for (Pair p:listCaseATirer) {
+            if(p.fst == n){
+                listCaseATirer.remove(p); // a verifier si ca fonctionne
+            }
+        }
+    }
 
 }

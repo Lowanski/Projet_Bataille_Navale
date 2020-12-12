@@ -416,7 +416,7 @@ public abstract class Navire implements Serializable {
         return tirer(tir);
     }
 
-    public void impactTire(Point impact,Navire tireur){
+    public void impactTire(Point impact,Navire tireur,Grille g){
 
         if(tireur.getPuissanceTire()!=16){  
 
@@ -429,6 +429,11 @@ public abstract class Navire implements Serializable {
                     toucherTab[impact.x-coord.x]=1;
                 }
                 System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord +"est touche au point : "+impact);
+                g.addListCaseATirer(this,impact,tireur);
+
+
+                // Methode public pour remplir la liste de case à tirer
+
             }
             else{ //si c'est un sous-marin
                 
@@ -441,11 +446,13 @@ public abstract class Navire implements Serializable {
             // on verifie si le bateau est coulee
             int nb=0;
             for(Object i: toucherTab){
-                if((int)i!=0){nb++;}
-            }                                           
+                if((int)i==1){nb++;}
+            }
+            System.out.println("Nombre de fois touché : " +nb);
             if(nb==taille){
                 this.setId(0);
                 System.out.println(this+" a ete coulee");
+                g.removeNavColeListCaseATire(this);
                 alive=false;
             }
 
