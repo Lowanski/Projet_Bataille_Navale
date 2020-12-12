@@ -1,5 +1,6 @@
 package com.ece;
 
+/*** ConsoleColors est une class qui permet de changer la couleur dans le terminal ***/
 public class ConsoleColors {
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset

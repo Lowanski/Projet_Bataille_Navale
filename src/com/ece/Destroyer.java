@@ -2,6 +2,8 @@ package com.ece;
 
 import java.io.Serializable;
 
+/*** Destroyer est une class fille de Navire qui a comme taille 3 et comme puissance de tire 1. En plus des autres, il peut tirer une
+ * fusée éclairante afin de voir les Navires ennemis ***/
 public class Destroyer extends Navire implements Serializable {
 
     private boolean fuse;

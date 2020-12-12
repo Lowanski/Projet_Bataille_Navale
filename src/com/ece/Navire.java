@@ -5,7 +5,10 @@ import java.io.Serializable;
 import java.util.Random;
 import java.util.Scanner;
 
-
+/*** La class Navire est la class qui s'occupe des éléments que chaque navire possède. Il peut y avoir 4 types de Navires
+ * (Cuirasse, Croiseur, Destroyer, Sous-Marin). Ils peuvent être coulés, peuvent tirer selon leur type et se deplacer
+ * en fonction de leur orientation.
+ */
 public abstract class Navire implements Serializable {
 
     private Point coord;
@@ -16,6 +19,7 @@ public abstract class Navire implements Serializable {
     protected int[] toucherTab;
     protected boolean alive;
 
+    // CONSTRUCTEUR
     Navire() {
         Random rand = new Random();
         int val;
@@ -29,32 +33,17 @@ public abstract class Navire implements Serializable {
         alive=true;
     }
 
+    // GETTERS
     public boolean getAlive(){
         return alive;
-    }
-
-    public void setAlive(boolean a){
-        alive=a;
-    }
-
-    public void setToucherTab(int[] toucherTab) {
-        this.toucherTab = toucherTab;
     }
 
     public int[] getToucherTab() {
         return toucherTab;
     }
 
-    public void setPuissanceTire(int puissanceTire) {
-        this.puissanceTire = puissanceTire;
-    }
-
     public int getPuissanceTire() {
         return puissanceTire;
-    }
-
-    public void setCoord(Point coord) {
-        this.coord = coord;
     }
 
     public Point getCoord() {
@@ -65,26 +54,48 @@ public abstract class Navire implements Serializable {
         return taille;
     }
 
-    public void setTaille(int taille) {
-        this.taille = taille;
+    public String getOrientation() {
+        return orientation;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    //SETTERS
+    public void setAlive(boolean a){
+        alive=a;
     }
 
-    public String getOrientation() {
-        return orientation;
+    public void setToucherTab(int[] toucherTab) {
+        this.toucherTab = toucherTab;
+    }
+
+    public void setPuissanceTire(int puissanceTire) {
+        this.puissanceTire = puissanceTire;
+    }
+
+    public void setCoord(Point coord) {
+        this.coord = coord;
+    }
+
+    public void setTaille(int taille) {
+        this.taille = taille;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setOrientation(String orientation) {
         this.orientation = orientation;
     }
 
+    /***
+     * Verifie si le navire selectionner peut se deplacer sur la gauche, la droite, en haut, en bas
+     * @param g
+     * @return
+     */
     protected boolean canGoRight(Grille g) {
         if ((orientation == "horizontale") && (getCoord().getX() + taille < 15) && (g.getTableau()[(int) getCoord().getX() + taille][(int) getCoord().getY()] == null)) {
             return true;
@@ -121,6 +132,10 @@ public abstract class Navire implements Serializable {
 
     }
 
+    /***
+     * Deplace le navire a droite, a gauche, en haut, a droite
+     * @param g
+     */
     protected void goDown(Grille g) {
         System.out.println("deplacement en bas");
         g.getTableau()[coord.x][coord.y] = null;
@@ -149,63 +164,11 @@ public abstract class Navire implements Serializable {
         coord.setLocation(coord.getX() + 1, coord.getY());
     }
 
-    public static class SaisieErroneeException extends Exception {
-        public SaisieErroneeException(String s) {
-            super(s);
-        }
-    }
-
-    public static void controle(String direction) throws SaisieErroneeException {
-        if (!direction.equals("D") && !direction.equals("d") && !direction.equals("G") && !direction.equals("g")
-                && !direction.equals("H") && !direction.equals("h") && !direction.equals("B") && !direction.equals("b")
-                && !direction.equals("X") && !direction.equals("x")) {
-            throw new SaisieErroneeException(
-                    "Vous n'avez pas rentrer une direction ( g = Gauche , d = Droit , h = Haut , b = Bas");
-        }
-    }
-
-    private static String saisirDirection() {
-        Scanner sc = new Scanner(System.in);
-        boolean correct = false;
-        String directionEntre;
-        do {
-            System.out.println("Saisissez une direction pour le navire : ");
-            System.out.println("Ou entrer \"X\" pour sortir du mode de déplacement");
-            directionEntre = sc.nextLine();
-            try {
-                controle(directionEntre);
-                correct = true;
-            } catch (SaisieErroneeException e) {
-                System.out.println(e);
-            }
-        } while (!correct);
-        return directionEntre;
-    }
-
-    private static String saisirDirectionAlea() {
-        Random rand = new Random();
-        boolean correct = false;
-        String directionEntre = null;
-        do {
-            int directionNb = rand.nextInt(4);
-            if (directionNb == 0)
-                directionEntre = "D";
-            if (directionNb == 1)
-                directionEntre = "G";
-            if (directionNb == 2)
-                directionEntre = "H";
-            if (directionNb == 3)
-                directionEntre = "B";
-            try {
-                controle(directionEntre);
-                correct = true;
-            } catch (SaisieErroneeException e) {
-                System.out.println(e);
-            }
-        } while (!correct);
-        return directionEntre;
-    }
-
+    /***
+     * Gestion globale du deplaccement
+     * @param g
+     * @return
+     */
     public boolean bouger(Grille g) {
         String direction;
         boolean pass = false;
@@ -326,6 +289,11 @@ public abstract class Navire implements Serializable {
         return true;
     }
 
+    /***
+     * Verification pour pouvoir se dépacer
+     * @param g
+     * @return
+     */
     public boolean canMove(Grille g) {
         int touch = 0;
         for (Object i : toucherTab) {
@@ -356,8 +324,64 @@ public abstract class Navire implements Serializable {
 
     }
 
-    public Point tirer(Point p) {
-        return p;
+    /***
+     * Blindage des saisie
+     */
+    public static class SaisieErroneeException extends Exception {
+        public SaisieErroneeException(String s) {
+            super(s);
+        }
+    }
+
+    public static void controle(String direction) throws SaisieErroneeException {
+        if (!direction.equals("D") && !direction.equals("d") && !direction.equals("G") && !direction.equals("g")
+                && !direction.equals("H") && !direction.equals("h") && !direction.equals("B") && !direction.equals("b")
+                && !direction.equals("X") && !direction.equals("x")) {
+            throw new SaisieErroneeException(
+                    "Vous n'avez pas rentrer une direction ( g = Gauche , d = Droit , h = Haut , b = Bas");
+        }
+    }
+
+    private static String saisirDirection() {
+        Scanner sc = new Scanner(System.in);
+        boolean correct = false;
+        String directionEntre;
+        do {
+            System.out.println("Saisissez une direction pour le navire : ");
+            System.out.println("Ou entrer \"X\" pour sortir du mode de déplacement");
+            directionEntre = sc.nextLine();
+            try {
+                controle(directionEntre);
+                correct = true;
+            } catch (SaisieErroneeException e) {
+                System.out.println(e);
+            }
+        } while (!correct);
+        return directionEntre;
+    }
+
+    private static String saisirDirectionAlea() {
+        Random rand = new Random();
+        boolean correct = false;
+        String directionEntre = null;
+        do {
+            int directionNb = rand.nextInt(4);
+            if (directionNb == 0)
+                directionEntre = "D";
+            if (directionNb == 1)
+                directionEntre = "G";
+            if (directionNb == 2)
+                directionEntre = "H";
+            if (directionNb == 3)
+                directionEntre = "B";
+            try {
+                controle(directionEntre);
+                correct = true;
+            } catch (SaisieErroneeException e) {
+                System.out.println(e);
+            }
+        } while (!correct);
+        return directionEntre;
     }
 
     public static void controleTire(String caseSelected) throws SaisieErroneeException,Exception {
@@ -409,13 +433,18 @@ public abstract class Navire implements Serializable {
         } while (!correct);
 
         tir.x = Character.getNumericValue(x) - 10;
-        System.out.println("Les caractères :"+tir.x + x);
         tir.y = convert;
 
         System.out.println(tir);
         return tirer(tir);
     }
 
+    /***
+     * Enleve des "point de vie au bateau" en fonction des tirs qu'il ressoit
+     * @param impact
+     * @param tireur
+     * @param g
+     */
     public void impactTire(Point impact,Navire tireur,Grille g){
 
         if(tireur.getPuissanceTire()!=16){  
@@ -465,6 +494,10 @@ public abstract class Navire implements Serializable {
         }
     }
 
+    public Point tirer(Point p) {
+        return p;
+    }
+    // VIE
     public float ScoreNavire(){
         float nb=0;
         for(int i=0; i<toucherTab.length; i++) {

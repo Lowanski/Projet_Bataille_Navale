@@ -1,13 +1,15 @@
 package com.ece;
 
 import java.awt.*;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
 import com.ece.Navire.SaisieErroneeException;
 import com.sun.tools.javac.util.Pair;
 
+/*** La Grille est une class qui s'occupe d'accueillir tous les navires d'un joueur. Des méthodes permettent d'afficher dans le
+ * terminal la grille, soit en voyant les bateaux, soit sans les voir. Elle stock la list des cases sur lesquels l'IA doit tirer.
+ * Elle permets aussi la recherche dans ses tableaux des navires. Et enfin checker les Navires.***/
 public class Grille implements Serializable {
 
     Navire[][] tableau = new Navire[15][15];
@@ -19,6 +21,7 @@ public class Grille implements Serializable {
     ArrayList<Pair<Navire,Point>> listCaseATirer = new ArrayList<>();
     String[] cons = {" 0 ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 ", "10 ", "11 ", "12 ", "13 ", "14 "};
 
+    //Constructeurs
     public Grille() {
         cuirasse = new Cuirasse();
         setPositionRandom(cuirasse);
@@ -44,7 +47,7 @@ public class Grille implements Serializable {
         }
     }
 
-    Grille(ArrayList<Cuirasse> listCui, ArrayList<Croiseur> listCroi, ArrayList<Destroyer> listDestr, ArrayList<SousMarin> listSous) {
+    public Grille(ArrayList<Cuirasse> listCui, ArrayList<Croiseur> listCroi, ArrayList<Destroyer> listDestr, ArrayList<SousMarin> listSous) {
         for (Cuirasse cui : listCui) {
             Point coord = cui.getCoord();
             setPosition(cui, coord.x, coord.y);
@@ -63,26 +66,7 @@ public class Grille implements Serializable {
         }
     }
 
-    public ArrayList<Navire> gettouslesNavires(){
-        return Navires;
-    }
-
-    public void setListCroiseur(ArrayList<Croiseur> c) {
-        listCroiseur = c;
-    }
-
-    public void setListDestroyer(ArrayList<Destroyer> d) {
-        listDestroyer = d;
-    }
-
-    public void setListSousmarin(ArrayList<SousMarin> sm) {
-        listSousmarin = sm;
-    }
-
-    public Navire[][] getTableau() {
-        return tableau;
-    }
-
+    //Methode d'affichage
     public void dessiner() {
         System.out.println(ConsoleColors.BLACK_BOLD + "   | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |");
         System.out.println("=================================================================" + ConsoleColors.RESET);
@@ -102,8 +86,6 @@ public class Grille implements Serializable {
                     }
                     else {
                         System.out.print(" " + tableau[j][i].getId() + "  " );
-
-                        System.out.print(ConsoleColors.RED_BOLD + " X  " + ConsoleColors.RESET);
                     }
                 } else {
                     System.out.print(ConsoleColors.BLUE_BOLD + "--- " + ConsoleColors.RESET);
@@ -139,88 +121,7 @@ public class Grille implements Serializable {
         System.out.println("=================================================================" + ConsoleColors.RESET);
     }
 
-    public void setPositionRandom(Navire n) {
-        Random rand = new Random();
-        Boolean isOk = false;
-        while (!isOk) {
-            if (n.getOrientation() == "verticale") {
-                Point point = new Point();
-                point.x = rand.nextInt(15);
-                point.y = rand.nextInt(15 - n.getTaille());
-                int nbCheck = 0;
-                for (int i = point.y; i < point.y + (n.getTaille()); i++) {
-                    if (tableau[point.x][i] == null) {
-                        nbCheck++;
-                    }
-                }
-                if (nbCheck == n.getTaille()) {
-                    n.setCoord(point);
-                    for (int i = point.y; i < point.y + (n.getTaille()); i++) {
-                        tableau[point.x][i] = n;
-                        isOk = true;
-                    }
-                }
-            } else {
-                Point point = new Point();
-                point.x = rand.nextInt(15 - n.getTaille());
-                point.y = rand.nextInt(15);
-                int nbCheck = 0;
-                for (int i = point.x; i < point.x + (n.getTaille()); i++) {
-                    if (tableau[i][point.y] == null) {
-                        nbCheck++;
-                    }
-                }
-                if (nbCheck == n.getTaille()) {
-                    n.setCoord(point);
-                    for (int i = point.x; i < point.x + (n.getTaille()); i++) {
-                        tableau[i][point.y] = n;
-                        isOk = true;
-                    }
-                }
-            }
-        }
-    }
-
-    public boolean setPosition(Navire n, int x, int y) {
-        if (n.getOrientation() == "verticale") {
-            Point point = new Point();
-            point.x = x;
-            point.y = y;
-            int nbCheck = 0;
-            for (int i = point.y; i < point.y + (n.getTaille()); i++) {
-                if (tableau[point.x][i] == null) {
-                    nbCheck++;
-                }
-            }
-            if (nbCheck == n.getTaille()) {
-                n.setCoord(point);
-                for (int i = point.y; i < point.y + (n.getTaille()); i++) {
-                    tableau[point.x][i] = n;
-                }
-                return true;
-            }
-            return false;
-        } else {
-            Point point = new Point();
-            point.x = x;
-            point.y = y;
-            int nbCheck = 0;
-            for (int i = point.x; i < point.x + (n.getTaille()); i++) {
-                if (tableau[i][point.y] == null) {
-                    nbCheck++;
-                }
-            }
-            if (nbCheck == n.getTaille()) {
-                n.setCoord(point);
-                for (int i = point.x; i < point.x + (n.getTaille()); i++) {
-                    tableau[i][point.y] = n;
-                }
-                return true;
-            }
-            return false;
-        }
-    }
-
+    //Controle des entrées clavier
     public static void controleNavire(int choix) throws SaisieErroneeException {
 
         if ((choix < 1) || (choix > 10)){
@@ -237,55 +138,6 @@ public class Grille implements Serializable {
         }
     }
 
-
-    public Navire getNavire(){
-
-        System.out.println("choississez un navire: ");
-        int choix=-10;
-        boolean correct = false;
-
-        for (int i = 0; i < Navires.size(); i++) {
-            System.out.println(i + 1 + ". " + Navires.get(i));
-        }
-
-        do {
-            try {
-                Scanner scan = new Scanner(System.in);
-                choix = scan.nextInt();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            try {
-                controleNavire(choix);
-                controleNavire2(Navires.get(choix-1));
-                correct=true;
-            } catch (SaisieErroneeException e) {
-                System.out.println(e);
-            }
-        } while (!correct);
-        return Navires.get(choix - 1);
-    }
-
-    public Navire getNavireAlea() {
-
-        int choix;
-        boolean correct = false;
-
-        Random rand = new Random();
-        do {
-            choix = rand.nextInt(10) + 1;
-            try {
-                controleNavire(choix);
-                controleNavire2(Navires.get(choix-1));
-                correct=true;
-            } catch (SaisieErroneeException e) {
-                System.out.println(e);
-            }
-        } while (!correct);
-
-        return Navires.get(choix - 1);
-    }
-
     public static void controleDestroyer(String choix) throws SaisieErroneeException {
         if ((!choix.equals("y")) && (!choix.equals("n"))) {
             throw new SaisieErroneeException(
@@ -293,151 +145,7 @@ public class Grille implements Serializable {
         }
     }
 
-    public void checkDestroyer(Destroyer tireur) {
-        String choix;
-        Scanner sc = new Scanner(System.in);
-
-        if (tireur.getFusee()) {
-            boolean ok = false;
-            do {
-                System.out.println("Il vous reste 1 fusee eclairante avec ce Destroyer, voulez-vous l'utiliser ? (y/n)");
-                choix = sc.nextLine();
-                try {
-                    controleDestroyer(choix);
-                    ok = true;
-                    if (choix.equals("y")) {
-                        tireur.setFusee(false);
-                        tireur.setPuissanceTire(16);
-                        System.out.println("tirreur :" + tireur.getFusee());
-                    }
-                } catch (SaisieErroneeException e) {
-                    System.out.println(e);
-                }
-            } while (!ok);
-        } else {
-            tireur.setPuissanceTire(1);
-        }
-    }
-
-    public void checkDestroyerAlea(Destroyer tireur) {
-
-        if (tireur.getFusee()) {
-
-            tireur.setFusee(false);
-            tireur.setPuissanceTire(16);
-            System.out.println("L'IA utilise une fusée éclairante");
-
-        } else {
-            tireur.setPuissanceTire(1);
-        }
-    }
-
-    public void checkNavire(int x, int y, Navire tireur) {
-        Point p = new Point();
-        p.setLocation(x, y);
-        if (getTableau()[x][y] != null) {
-            getTableau()[x][y].impactTire(p, tireur,this);
-        }
-    }
-
-    public boolean checkTirePossible(Point p, Navire tireur) {
-
-        boolean possible = false;
-
-        if (tireur.getPuissanceTire() == 4) {
-            if ((p.x == 14) && (p.y < 14)) {
-                checkNavire(p.x, p.y, tireur);
-                checkNavire(p.x, p.y + 1, tireur);
-                possible = true;
-            }
-            if ((p.x < 14) && (p.y == 14)) {
-                checkNavire(p.x, p.y, tireur);
-                checkNavire(p.x + 1, p.y, tireur);
-                possible = true;
-            }
-            if ((p.x == 14) && (p.y == 14)) {
-                checkNavire(p.x, p.y, tireur);
-            }
-        }
-        if (tireur.getPuissanceTire() == 9) {
-            if ((p.x == 0) && ((p.y != 14) && (p.y != 0))) {
-                for (int i = p.x; i < p.x + 2; i++) {
-                    for (int j = p.y - 1; j < p.y + 2; j++) {
-                        checkNavire(i, j, tireur);
-                    }
-                }
-                possible = true;
-            }
-
-            if ((p.x == 14) && ((p.y != 0) && (p.y != 14))) {
-
-                for (int i = p.x - 1; i < p.x + 1; i++) {
-                    for (int j = p.y - 1; j < p.y + 2; j++) {
-                        checkNavire(i, j, tireur);
-                    }
-                }
-                possible = true;
-            }
-
-            if ((p.y == 0) && ((p.x != 0) && (p.x != 14))) {
-
-                for (int i = p.x - 1; i < p.x + 2; i++) {
-                    for (int j = p.y; j < p.y + 2; j++) {
-                        checkNavire(i, j, tireur);
-                    }
-                }
-                possible = true;
-            }
-            if ((p.y == 14) && ((p.x != 0) && (p.x != 14))) {
-
-                for (int i = p.x - 1; i < p.x + 2; i++) {
-                    for (int j = p.y - 1; j < p.y + 1; j++) {
-                        checkNavire(i, j, tireur);
-                    }
-                }
-                possible = true;
-            }
-
-            if ((p.x == 0) && (p.y == 0)) {
-                checkNavire(p.x, p.y, tireur);
-                checkNavire(p.x + 1, p.y, tireur);
-                checkNavire(p.x, p.y + 1, tireur);
-                checkNavire(p.x + 1, p.y + 1, tireur);
-                possible = true;
-            }
-            if ((p.x == 0) && (p.y == 14)) {
-                checkNavire(p.x, p.y - 1, tireur);
-                checkNavire(p.x, p.y, tireur);
-                checkNavire(p.x + 1, p.y - 1, tireur);
-                checkNavire(p.x + 1, p.y, tireur);
-                possible = true;
-            }
-            if ((p.x == 14) && (p.y == 0)) {
-                checkNavire(p.x - 1, p.y, tireur);
-                checkNavire(p.x - 1, p.y + 1, tireur);
-                checkNavire(p.x, p.y, tireur);
-                checkNavire(p.x, p.y + 1, tireur);
-                possible = true;
-            }
-            if ((p.x == 14) && (p.y == 14)) {
-                checkNavire(p.x, p.y, tireur);
-                checkNavire(p.x - 1, p.y, tireur);
-                checkNavire(p.x, p.y - 1, tireur);
-                checkNavire(p.x - 1, p.y - 1, tireur);
-                possible = true;
-            }
-        }
-        if ((tireur.getPuissanceTire() == 16) && ((p.y > 11) || (p.x > 11))) {
-            for (int i = p.y; i <= 14; i++) {
-                for (int j = p.x; i <= 14; i++) {
-                    checkNavire(j, i, tireur);
-                }
-            }
-            possible = true;
-        }
-        return possible;
-    }
-
+    // Methodes
     public void rechercheNavire(Navire tireur) {
 
         if (tireur.getId() == 3) {
@@ -662,6 +370,163 @@ public class Grille implements Serializable {
         }else return;
     }
 
+    public void removeNavColeListCaseATire(Navire n){
+        int compteur=0;
+        while (compteur < listCaseATirer.size()){
+            if (listCaseATirer.get(compteur).fst == n){
+                listCaseATirer.remove(compteur);
+            }else{
+                compteur++;
+            }
+        }
+    }
+
+    //Les Checks
+    public void checkDestroyer(Destroyer tireur) {
+        String choix;
+        Scanner sc = new Scanner(System.in);
+
+        if (tireur.getFusee()) {
+            boolean ok = false;
+            do {
+                System.out.println("Il vous reste 1 fusee eclairante avec ce Destroyer, voulez-vous l'utiliser ? (y/n)");
+                choix = sc.nextLine();
+                try {
+                    controleDestroyer(choix);
+                    ok = true;
+                    if (choix.equals("y")) {
+                        tireur.setFusee(false);
+                        tireur.setPuissanceTire(16);
+                        System.out.println("tirreur :" + tireur.getFusee());
+                    }
+                } catch (SaisieErroneeException e) {
+                    System.out.println(e);
+                }
+            } while (!ok);
+        } else {
+            tireur.setPuissanceTire(1);
+        }
+    }
+
+    public void checkDestroyerAlea(Destroyer tireur) {
+
+        if (tireur.getFusee()) {
+
+            tireur.setFusee(false);
+            tireur.setPuissanceTire(16);
+            System.out.println("L'IA utilise une fusée éclairante");
+
+        } else {
+            tireur.setPuissanceTire(1);
+        }
+    }
+
+    public void checkNavire(int x, int y, Navire tireur) {
+        Point p = new Point();
+        p.setLocation(x, y);
+        if (getTableau()[x][y] != null) {
+            getTableau()[x][y].impactTire(p, tireur,this);
+        }
+    }
+
+    public boolean checkTirePossible(Point p, Navire tireur) {
+
+        boolean possible = false;
+
+        if (tireur.getPuissanceTire() == 4) {
+            if ((p.x == 14) && (p.y < 14)) {
+                checkNavire(p.x, p.y, tireur);
+                checkNavire(p.x, p.y + 1, tireur);
+                possible = true;
+            }
+            if ((p.x < 14) && (p.y == 14)) {
+                checkNavire(p.x, p.y, tireur);
+                checkNavire(p.x + 1, p.y, tireur);
+                possible = true;
+            }
+            if ((p.x == 14) && (p.y == 14)) {
+                checkNavire(p.x, p.y, tireur);
+            }
+        }
+        if (tireur.getPuissanceTire() == 9) {
+            if ((p.x == 0) && ((p.y != 14) && (p.y != 0))) {
+                for (int i = p.x; i < p.x + 2; i++) {
+                    for (int j = p.y - 1; j < p.y + 2; j++) {
+                        checkNavire(i, j, tireur);
+                    }
+                }
+                possible = true;
+            }
+
+            if ((p.x == 14) && ((p.y != 0) && (p.y != 14))) {
+
+                for (int i = p.x - 1; i < p.x + 1; i++) {
+                    for (int j = p.y - 1; j < p.y + 2; j++) {
+                        checkNavire(i, j, tireur);
+                    }
+                }
+                possible = true;
+            }
+
+            if ((p.y == 0) && ((p.x != 0) && (p.x != 14))) {
+
+                for (int i = p.x - 1; i < p.x + 2; i++) {
+                    for (int j = p.y; j < p.y + 2; j++) {
+                        checkNavire(i, j, tireur);
+                    }
+                }
+                possible = true;
+            }
+            if ((p.y == 14) && ((p.x != 0) && (p.x != 14))) {
+
+                for (int i = p.x - 1; i < p.x + 2; i++) {
+                    for (int j = p.y - 1; j < p.y + 1; j++) {
+                        checkNavire(i, j, tireur);
+                    }
+                }
+                possible = true;
+            }
+
+            if ((p.x == 0) && (p.y == 0)) {
+                checkNavire(p.x, p.y, tireur);
+                checkNavire(p.x + 1, p.y, tireur);
+                checkNavire(p.x, p.y + 1, tireur);
+                checkNavire(p.x + 1, p.y + 1, tireur);
+                possible = true;
+            }
+            if ((p.x == 0) && (p.y == 14)) {
+                checkNavire(p.x, p.y - 1, tireur);
+                checkNavire(p.x, p.y, tireur);
+                checkNavire(p.x + 1, p.y - 1, tireur);
+                checkNavire(p.x + 1, p.y, tireur);
+                possible = true;
+            }
+            if ((p.x == 14) && (p.y == 0)) {
+                checkNavire(p.x - 1, p.y, tireur);
+                checkNavire(p.x - 1, p.y + 1, tireur);
+                checkNavire(p.x, p.y, tireur);
+                checkNavire(p.x, p.y + 1, tireur);
+                possible = true;
+            }
+            if ((p.x == 14) && (p.y == 14)) {
+                checkNavire(p.x, p.y, tireur);
+                checkNavire(p.x - 1, p.y, tireur);
+                checkNavire(p.x, p.y - 1, tireur);
+                checkNavire(p.x - 1, p.y - 1, tireur);
+                possible = true;
+            }
+        }
+        if ((tireur.getPuissanceTire() == 16) && ((p.y > 11) || (p.x > 11))) {
+            for (int i = p.y; i <= 14; i++) {
+                for (int j = p.x; i <= 14; i++) {
+                    checkNavire(j, i, tireur);
+                }
+            }
+            possible = true;
+        }
+        return possible;
+    }
+
     private void checkCaseATirer(int posxTire, int posyTire, Pair<Navire, Point> posATirer, Navire n) {
         if (getTableau()[posxTire][posyTire] != null) {  // tableau ennemi
             int temp = casetouche(getTableau()[posxTire][posyTire], posyTire, posxTire);
@@ -676,15 +541,143 @@ public class Grille implements Serializable {
 
     }
 
-    public void removeNavColeListCaseATire(Navire n){
-        int compteur=0;
-        while (compteur < listCaseATirer.size()){
-            if (listCaseATirer.get(compteur).fst == n){
-                listCaseATirer.remove(compteur);
-            }else{
-                compteur++;
+    //Setters
+    public void setPositionRandom(Navire n) {
+        Random rand = new Random();
+        Boolean isOk = false;
+        while (!isOk) {
+            if (n.getOrientation() == "verticale") {
+                Point point = new Point();
+                point.x = rand.nextInt(15);
+                point.y = rand.nextInt(15 - n.getTaille());
+                int nbCheck = 0;
+                for (int i = point.y; i < point.y + (n.getTaille()); i++) {
+                    if (tableau[point.x][i] == null) {
+                        nbCheck++;
+                    }
+                }
+                if (nbCheck == n.getTaille()) {
+                    n.setCoord(point);
+                    for (int i = point.y; i < point.y + (n.getTaille()); i++) {
+                        tableau[point.x][i] = n;
+                        isOk = true;
+                    }
+                }
+            } else {
+                Point point = new Point();
+                point.x = rand.nextInt(15 - n.getTaille());
+                point.y = rand.nextInt(15);
+                int nbCheck = 0;
+                for (int i = point.x; i < point.x + (n.getTaille()); i++) {
+                    if (tableau[i][point.y] == null) {
+                        nbCheck++;
+                    }
+                }
+                if (nbCheck == n.getTaille()) {
+                    n.setCoord(point);
+                    for (int i = point.x; i < point.x + (n.getTaille()); i++) {
+                        tableau[i][point.y] = n;
+                        isOk = true;
+                    }
+                }
             }
         }
     }
 
+    public boolean setPosition(Navire n, int x, int y) {
+        if (n.getOrientation() == "verticale") {
+            Point point = new Point();
+            point.x = x;
+            point.y = y;
+            int nbCheck = 0;
+            for (int i = point.y; i < point.y + (n.getTaille()); i++) {
+                if (tableau[point.x][i] == null) {
+                    nbCheck++;
+                }
+            }
+            if (nbCheck == n.getTaille()) {
+                n.setCoord(point);
+                for (int i = point.y; i < point.y + (n.getTaille()); i++) {
+                    tableau[point.x][i] = n;
+                }
+                return true;
+            }
+            return false;
+        } else {
+            Point point = new Point();
+            point.x = x;
+            point.y = y;
+            int nbCheck = 0;
+            for (int i = point.x; i < point.x + (n.getTaille()); i++) {
+                if (tableau[i][point.y] == null) {
+                    nbCheck++;
+                }
+            }
+            if (nbCheck == n.getTaille()) {
+                n.setCoord(point);
+                for (int i = point.x; i < point.x + (n.getTaille()); i++) {
+                    tableau[i][point.y] = n;
+                }
+                return true;
+            }
+            return false;
+        }
+    }
+
+    //Getters
+    public Navire getNavire(){
+
+        System.out.println("choississez un navire: ");
+        int choix=-10;
+        boolean correct = false;
+
+        for (int i = 0; i < Navires.size(); i++) {
+            System.out.println(i + 1 + ". " + Navires.get(i));
+        }
+
+        do {
+            try {
+                Scanner scan = new Scanner(System.in);
+                choix = scan.nextInt();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            try {
+                controleNavire(choix);
+                controleNavire2(Navires.get(choix-1));
+                correct=true;
+            } catch (SaisieErroneeException e) {
+                System.out.println(e);
+            }
+        } while (!correct);
+        return Navires.get(choix - 1);
+    }
+
+    public Navire getNavireAlea() {
+
+        int choix;
+        boolean correct = false;
+
+        Random rand = new Random();
+        do {
+            choix = rand.nextInt(10) + 1;
+            try {
+                controleNavire(choix);
+                controleNavire2(Navires.get(choix-1));
+                correct=true;
+            } catch (SaisieErroneeException e) {
+                System.out.println(e);
+            }
+        } while (!correct);
+
+        return Navires.get(choix - 1);
+    }
+
+    public Navire[][] getTableau() {
+        return tableau;
+    }
+
+    public ArrayList<Navire> gettouslesNavires(){
+        return Navires;
+    }
 }

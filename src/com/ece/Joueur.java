@@ -2,6 +2,10 @@ package com.ece;
 
 import java.io.Serializable;
 
+/***
+ * La class Joueur prend en compte les élements qu'un joueur a à sa disposition pour jouer, comme ça propre grille,
+ * la grille adverse ainsi que les actions qu'il peut réaliser
+ */
 public class Joueur implements Serializable {
     static private final long serialVersionUID = 6L;
     private int action;
@@ -19,21 +23,6 @@ public class Joueur implements Serializable {
             nb = nb + i.ScoreNavire();
         }
         return nb*100;
-    }
-
-    public Grille getJGrille(){
-        return jGrille;
-    }
-    public Grille getOGrille(){
-        return oGrille;
-    }
-
-    public int getAction() {
-        return action;
-    }
-
-    public void setActionDebutTour() {
-        this.action = 1;
     }
 
     public boolean useAction(){
@@ -54,5 +43,23 @@ public class Joueur implements Serializable {
             }
         }
         return false;
+    }
+
+    //Setters
+    public void setActionDebutTour() {
+        this.action = 1;
+    }
+
+    //Getters
+    public Grille getJGrille(){
+        return jGrille;
+    }
+
+    public Grille getOGrille(){
+        return oGrille;
+    }
+
+    public int getAction() {
+        return action;
     }
 }

@@ -8,7 +8,9 @@ import java.util.Scanner;
 
 import com.ece.Navire.SaisieErroneeException;
 
-
+/***
+ * Le menu est le main du code. il centralise toute les class et permet de jouer au jeu.
+ */
 public class Menu {
 
     private static ArrayList<Cuirasse> listCuirasseJ = new ArrayList<Cuirasse>();
@@ -21,6 +23,13 @@ public class Menu {
     private static ArrayList<SousMarin> listSousmarinO = new ArrayList<SousMarin>();
     private static Chrono chrono = new Chrono();
 
+    // ---------------------BOUCLE DE JEU-----------------------
+
+    /***
+     * Menu principale, accueil du jeu, possibilités de commencer une nouvelle partie,
+     * charger une ancienne ou ouvrir l'aide.
+     * @param args
+     */
     public static void main(String[] args) {
 
         int nombre;
@@ -64,13 +73,6 @@ public class Menu {
         scan.close();
     }
 
-    public static void controleMenu(String choix) throws SaisieErroneeException {
-        if ((!choix.equals("1"))&&(!choix.equals("2"))&&(!choix.equals("3")&&(!choix.equals("4")))) {
-            throw new SaisieErroneeException(
-                    "Vous n'avez pas entrer une action valide, ressaisir: ");
-        }
-    }
-
     public static void jouerPartie() {
         Grille Grille1 = new Grille();
         Grille Grille2 = new Grille();
@@ -81,58 +83,12 @@ public class Menu {
         play(joueur1, joueur2);
     }
 
-
-    private static void chargerPartieSerial() {
-        Joueur joueur1 = null;
-        Joueur joueur2 = null;
-        ObjectInputStream ois;
-        FileInputStream fis;
-        chrono.resume();
-
-        try {
-            File fileTst = new File("Save/partieSave.serial");
-            if (fileTst.exists()){
-                // ouverture d'un flux d'entrée depuis le fichier "Save/partieSave.serial"
-                fis = new FileInputStream("Save/partieSave.serial"); // création d'un "flux objet" avec le flux fichier
-                ois = new ObjectInputStream(fis);
-            }else return;
-
-
-            try {
-                // désérialisation : lecture de l'objet depuis le flux d'entrée
-                joueur1 = (Joueur) ois.readObject();
-                joueur2 = (Joueur) ois.readObject();
-                chrono = (Chrono) ois.readObject();
-            } finally {
-                // on ferme les flux
-                try {
-                    ois.close();
-                } finally {
-                    fis.close();
-                }
-            }
-        } catch (IOException | ClassNotFoundException ioe) {
-            ioe.printStackTrace();
-        }
-
-        if (joueur1 != null) {
-            System.out.println(joueur1 + " a ete deserialise");
-        }
-        if (joueur2 != null) {
-            System.out.println(joueur2 + " a ete deserialise");
-        }
-
-        play(joueur1, joueur2);
-
-    }
-
-    public static void controleAction(String choix) throws SaisieErroneeException {
-        if ((!choix.equals("1"))&&(!choix.equals("2"))&&(!choix.equals("3"))) {
-            throw new SaisieErroneeException(
-                    "Vous n'avez pas entrer une action valide, ressaisir: ");
-        }
-    }
-
+    /***
+     * Menu d'action avec possibilitée de se deplacer tirer et sauvegarder. C'est aussi la boucle de jeu,
+     * avec un comptage des tours et le tour de jeu de l'IA
+     * @param joueur1
+     * @param joueur2
+     */
     public static void play(Joueur joueur1, Joueur joueur2) {
         int etatPartie; // Etat partie 1 = le joueur a joué | 0 = le jouer quitte la partie | -1 = un joueur a gagné la partie
         int nombre;
@@ -204,6 +160,11 @@ public class Menu {
         }
     }
 
+    /***
+     * L'IA choisie aléatoiremnt de tirer ou de se déplacer.
+     * @param joueur2
+     * @param joueur1
+     */
     private static void doActionIA(Joueur joueur2, Joueur joueur1) {
         Random rand = new Random();
         int actionAlea = rand.nextInt(2);
@@ -224,6 +185,13 @@ public class Menu {
         }
     }
 
+    /***
+     * Réalise l'action selectionner dans la fonction play
+     * @param joueur1
+     * @param joueur2
+     * @param nombre
+     * @return
+     */
     public static int doAction(Joueur joueur1, Joueur joueur2, int nombre) {
         int etatPartie;
         switch (nombre) {
@@ -259,6 +227,83 @@ public class Menu {
         return etatPartie;
     }
 
+    public static void Score(Joueur j1, Joueur j2){
+
+        float Scoreplayer1= j1.ScoreJoueur();
+        float Scoreplayer2= j2.ScoreJoueur();
+
+        System.out.println("Score de partie: \njoueur 1:"+ (int)Scoreplayer2 +" IA: "+ (int)Scoreplayer1);
+    }
+
+    // BLINDAGE DE SAISIE
+    public static void controleMenu(String choix) throws SaisieErroneeException {
+        if ((!choix.equals("1"))&&(!choix.equals("2"))&&(!choix.equals("3")&&(!choix.equals("4")))) {
+            throw new SaisieErroneeException(
+                    "Vous n'avez pas entrer une action valide, ressaisir: ");
+        }
+    }
+
+    public static void controleAction(String choix) throws SaisieErroneeException {
+        if ((!choix.equals("1"))&&(!choix.equals("2"))&&(!choix.equals("3"))) {
+            throw new SaisieErroneeException(
+                    "Vous n'avez pas entrer une action valide, ressaisir: ");
+        }
+    }
+
+    // SAUVEGARDE ET CHARGEMENT
+
+    /***
+     * Sauvegarde de la partie de manière serialiser en sérialisant le joueur 1, le joueur 2 et le chrono
+     */
+    private static void chargerPartieSerial() {
+        Joueur joueur1 = null;
+        Joueur joueur2 = null;
+        ObjectInputStream ois;
+        FileInputStream fis;
+        chrono.resume();
+
+        try {
+            File fileTst = new File("Save/partieSave.serial");
+            if (fileTst.exists()){
+                // ouverture d'un flux d'entrée depuis le fichier "Save/partieSave.serial"
+                fis = new FileInputStream("Save/partieSave.serial"); // création d'un "flux objet" avec le flux fichier
+                ois = new ObjectInputStream(fis);
+            }else return;
+
+
+            try {
+                // désérialisation : lecture de l'objet depuis le flux d'entrée
+                joueur1 = (Joueur) ois.readObject();
+                joueur2 = (Joueur) ois.readObject();
+                chrono = (Chrono) ois.readObject();
+            } finally {
+                // on ferme les flux
+                try {
+                    ois.close();
+                } finally {
+                    fis.close();
+                }
+            }
+        } catch (IOException | ClassNotFoundException ioe) {
+            ioe.printStackTrace();
+        }
+
+        if (joueur1 != null) {
+            System.out.println(joueur1 + " a ete deserialise");
+        }
+        if (joueur2 != null) {
+            System.out.println(joueur2 + " a ete deserialise");
+        }
+
+        play(joueur1, joueur2);
+
+    }
+
+    /***
+     * Chargement (deserialisation) du fichier "partieSave.serial" pour instancier joueur 1, joueur 2 et le chrono
+     * @param j1
+     * @param j2
+     */
     public static void sauvegarderPartie(Joueur j1, Joueur j2) {
         try {
             chrono.pause();
@@ -287,6 +332,7 @@ public class Menu {
         }
     }
 
+    //Chargement d'une partie à partir d'un fichier txt
     public static void chargerPartie() {
         lireFichier();
         Grille Grille1 = new Grille(listCuirasseJ, listCroiseurJ, listDestroyerJ, listSousmarinJ);
@@ -301,7 +347,7 @@ public class Menu {
         joueur2.getOGrille().dessiner();
 
     }
-
+    //Lecture du fichier
     public static void lireFichier() {
         FileReader monFichier = null;
         BufferedReader tampon = null;
@@ -396,7 +442,7 @@ public class Menu {
             }
         }
     }
-
+    //Parsing des lignes pour instancier les attributs des joueurs
     private static Navire chargerInfo(String ligne, String j){
         int pos = ligne.indexOf(' ');
         if (pos <= 0) {
@@ -495,16 +541,9 @@ public class Menu {
         return listTemporaire.get(0);
     }
 
+    // AIDE
     public static void ouvrirAide(){
 
-    }
-
-    public static void Score(Joueur j1, Joueur j2){
-
-        float Scoreplayer1= j1.ScoreJoueur();
-        float Scoreplayer2= j2.ScoreJoueur();
-
-        System.out.println("Score de partie: \njoueur 1:"+ (int)Scoreplayer2 +" IA: "+ (int)Scoreplayer1);
     }
 
 }

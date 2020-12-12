@@ -2,6 +2,8 @@ package com.ece;
 
 // https://fr.jeffprod.com/blog/2015/un-chronometre-en-java/
 
+
+/*** Chrono est une class qui permet de lancer, mettre en pause, reprendre après la pause et afficher son chrono ***/
 public class Chrono {
     private long tempsDepart=0;
     private long tempsFin=0;
