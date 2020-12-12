@@ -19,11 +19,13 @@ public class Menu {
     private static ArrayList<Croiseur> listCroiseurO = new ArrayList<Croiseur>();
     private static ArrayList<Destroyer> listDestroyerO = new ArrayList<Destroyer>();
     private static ArrayList<SousMarin> listSousmarinO = new ArrayList<SousMarin>();
+    private static Chrono chrono = new Chrono();
 
     public static void main(String[] args) {
 
         int nombre;
         String choix;
+
         Scanner scan = new Scanner(System.in);
         do {
             System.out.println("--------LA BATAILLE NAVAL--------\n");
@@ -74,7 +76,7 @@ public class Menu {
         Grille Grille2 = new Grille();
         Joueur joueur1 = new Joueur(Grille1, Grille2);
         Joueur joueur2 = new Joueur(Grille2, Grille1);
-        int nombre;
+        chrono.start();
 
         play(joueur1, joueur2);
     }
@@ -84,6 +86,7 @@ public class Menu {
         Joueur joueur2 = null;
         ObjectInputStream ois;
         FileInputStream fis;
+        chrono.resume();
 
         try {
             File fileTst = new File("Save/partieSave.serial");
@@ -98,6 +101,7 @@ public class Menu {
                 // désérialisation : lecture de l'objet depuis le flux d'entrée
                 joueur1 = (Joueur) ois.readObject();
                 joueur2 = (Joueur) ois.readObject();
+                chrono = (Chrono) ois.readObject();
             } finally {
                 // on ferme les flux
                 try {
@@ -129,7 +133,7 @@ public class Menu {
     }
 
     public static void play(Joueur joueur1, Joueur joueur2) {
-        int etatPartie = 0; // Etat partie 1 = le joueur a joué | 0 = le jouer quitte la partie | -1 = un joueur a gagné la partie
+        int etatPartie; // Etat partie 1 = le joueur a joué | 0 = le jouer quitte la partie | -1 = un joueur a gagné la partie
         int nombre;
         do {
             String choix;
@@ -170,31 +174,24 @@ public class Menu {
 
                 if(joueur2.checkEtatJoueur()){  // si l'IA peut jouer
 
-
                     System.out.println("##### L'IA JOUE #####");
                     if(etatPartie == 1)
                         doActionIA(joueur2,joueur1);
-/*
+                    /*
                     Faire la partie où l'ordi fait aléatoirement quelque chose.
                     Il faut adapter les fonction de tire et de mouvement pour l'ordi (ne par demandé de rentrer quelque chose)
-
-
-                    ######### CODE CHOIX ALEA DE L ORDI ########
-
-
-                    ######### CODE IA TIRE OU MOUV #######
-
-                    ######### CODE ETAT DE VICTOIRE #######
-
                     */
+
                 }
                 else{
-                    System.out.println("VICTOIRE DU JOUEUR 1");
+                    chrono.stop();
+                    System.out.println(ConsoleColors.BLUE+"\nVICTOIRE DU JOUEUR 1 EN : "+chrono.getDureeSec()+"s"+ConsoleColors.RESET);
                     etatPartie=-1;
                 }
             }
             else{
-                System.out.println("VICTOIRE DE l'IA");
+                chrono.stop();
+                System.out.println(ConsoleColors.BLUE+"\nVICTOIRE DE l'IA EN : "+chrono.getDureeSec()+"s"+ConsoleColors.RESET);
                 etatPartie=-1;
             }
 
@@ -262,12 +259,15 @@ public class Menu {
 
     public static void sauvegarderPartie(Joueur j1, Joueur j2) {
         try {
+            chrono.pause();
             FileOutputStream fos = new FileOutputStream("Save/partieSave.serial");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             try {
                 // sérialisation : écriture de l'objet dans le flux de sortie
+
                 oos.writeObject(j1);
                 oos.writeObject(j2);
+                oos.writeObject(chrono);
                 // on vide le tampon
                 oos.flush();
                 System.out.println(j1 + " a ete serialise");
@@ -463,7 +463,7 @@ public class Menu {
         listTemporaire.get(0).setCoord(coordNav);
 
         String nbCaseCasse;
-        Boolean fin = false;
+        boolean fin = false;
         if (ligne.length() - pos <= 2) {
             nbCaseCasse = ligne.substring(pos + 1, ligne.length());
             fin = true;

@@ -373,7 +373,7 @@ public abstract class Navire implements Serializable {
         }catch (Exception e){
             throw new Exception("Vous avez rentré un mauvais type");
         }
-        if (((x < 'a') || (x > 'o')) || ((convert >= 15) || (convert <= 0)))
+        if (((x < 'a') || (x > 'o')) || ((convert >= 15) || (convert < 0)))
             throw new SaisieErroneeException("Vous n'avez pas rentrer une case de type : B4 ");
 
     }
@@ -430,10 +430,6 @@ public abstract class Navire implements Serializable {
                 }
                 System.out.println("le bateau "+this+" qui a pour coordonnée "+ coord +"est touche au point : "+impact);
                 g.addListCaseATirer(this,impact,tireur);
-
-
-                // Methode public pour remplir la liste de case à tirer
-
             }
             else{ //si c'est un sous-marin
                 
