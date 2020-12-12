@@ -504,7 +504,7 @@ public class Menu {
         float Scoreplayer1= j1.ScoreJoueur();
         float Scoreplayer2= j2.ScoreJoueur();
 
-        System.out.println("Score de partie: "+ Scoreplayer2 +" / "+ Scoreplayer1);
+        System.out.println("Score de partie: \njoueur 1:"+ (int)Scoreplayer2 +" IA: "+ (int)Scoreplayer1);
     }
 
 }

@@ -466,11 +466,10 @@ public abstract class Navire implements Serializable {
     }
 
     public float ScoreNavire(){
-        int nb=0;
+        float nb=0;
         for(int i=0; i<toucherTab.length; i++) {
             if(toucherTab[i]==1) {
                 nb++;
-                System.out.print("touché "+nb+ "fois ");
             }
         }
         return nb/getTaille();

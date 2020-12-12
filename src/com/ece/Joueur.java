@@ -15,10 +15,9 @@ public class Joueur implements Serializable {
 
     public float ScoreJoueur(){
         float nb=0;
-        for(Navire i: jGrille.gettouslesNavires()){
-            nb = nb+ i.ScoreNavire();
+        for(Navire i: jGrille.gettouslesNavires()) {
+            nb = nb + i.ScoreNavire();
         }
-        System.out.println("dansjoueur:"+nb);
         return nb*100;
     }
 
